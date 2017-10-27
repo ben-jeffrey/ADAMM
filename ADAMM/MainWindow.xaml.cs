@@ -70,8 +70,18 @@ namespace ADAMM
             }
         }
 
-        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void athleteList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            Athlete currentAthlete = (Athlete)e.AddedItems[0];
+            athleteFName.Text = currentAthlete.firstName;
+            athleteLName.Text = currentAthlete.lastName;
 
+            if (currentAthlete.AthleteGender == 'M')
+                athleteMale.IsChecked = true;
+            else
+                athleteFemale.IsChecked = true;
+
+            athleteTeam.ItemsSource = m.MeetTeams;
+            athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
         }
     }
 }

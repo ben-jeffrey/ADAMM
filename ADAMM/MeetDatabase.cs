@@ -54,7 +54,7 @@ namespace ADAMM {
         public List<Team> createTeams() {
             open();
             List<Team> teams = new List<Team>();
-            OdbcCommand com = new OdbcCommand("SELECT Team_no, Team_name, Team_abbr, Team_short FROM Team");
+            OdbcCommand com = new OdbcCommand("SELECT Team_no, Team_name, Team_abbr, Team_short FROM Team ORDER BY Team_name ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
@@ -67,11 +67,11 @@ namespace ADAMM {
         public List<Athlete> createTeamRoster(int teamNum) {
             open();
             List<Athlete> athletes = new List<Athlete>();
-            OdbcCommand com = new OdbcCommand("SELECT Ath_no, First_name, Last_name FROM Athlete WHERE Team_no = " + teamNum);
+            OdbcCommand com = new OdbcCommand("SELECT Ath_no, First_name, Last_name, Ath_Sex  FROM Athlete WHERE Team_no = " + teamNum);
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                athletes.Add(new Athlete(r.GetInt32(0), r.GetString(1), r.GetString(2), this));
+                athletes.Add(new Athlete(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetChar(3), this));
             }
             close();
             return athletes;

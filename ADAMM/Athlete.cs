@@ -12,12 +12,13 @@ namespace ADAMM
         public Team AthleteTeam { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
-        private char sex { get; set; }
+        public char AthleteGender { get; set; }
 
-        public Athlete(int ath, String fname, String lname, MeetDatabase db) {
+        public Athlete(int ath, String fname, String lname, Char gender, MeetDatabase db) {
             number = ath;
             firstName = fname.Trim();
             lastName = lname.Trim();
+            AthleteGender = gender;
             MeetDB = db;
         }
 

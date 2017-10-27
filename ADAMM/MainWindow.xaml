@@ -29,7 +29,12 @@
             </TabItem>
             <TabItem Header="Athletes">
                 <Grid Background="#FFE5E5E5">
-                    <ListView x:Name="athleteList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="listView_SelectionChanged">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="athleteList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="athleteList_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=number}"/>
@@ -39,6 +44,18 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+                    <Grid Grid.Column="2">
+                        <TextBox x:Name="athleteFName" HorizontalAlignment="Left" Height="23" Margin="50,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                        <Label Content="First:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="athleteLName" HorizontalAlignment="Left" Height="23" Margin="50,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                        <Label Content="Last:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+                        <RadioButton x:Name="athleteMale" GroupName="athleteGender" Content="Male" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+                        <RadioButton x:Name="athleteFemale" GroupName="athleteGender" Content="Female" HorizontalAlignment="Left" Margin="60,90,0,0" VerticalAlignment="Top"/>
+                        <ComboBox x:Name="athleteTeam" HorizontalAlignment="Left" Margin="50,110,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="longName"/>
+                        <Label Content="Team:" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" />
+
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Teams">
