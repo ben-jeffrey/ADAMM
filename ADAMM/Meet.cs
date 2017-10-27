@@ -57,6 +57,10 @@ namespace ADAMM
             }
             return found;
         }
+
+        public void close() {
+            MeetDB.close();
+        }
         
         public override string ToString() {
             return MeetName + " " + MeetDate;

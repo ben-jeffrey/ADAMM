@@ -23,7 +23,7 @@ namespace ADAMM
         Meet m;
         public MainWindow() {
             InitializeComponent();
-            m = new Meet("C:\\db.mdb");
+            m = new Meet("C:\\Users\\PinQiblo2\\Desktop\\db.mdb");
             Title = m.ToString();
             foreach (Event e in m.MeetEvents) 
                 eventList.Items.Add(e);
@@ -82,6 +82,37 @@ namespace ADAMM
 
             athleteTeam.ItemsSource = m.MeetTeams;
             athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
+        }
+
+        private void athleteUpdate_Click(object sender, RoutedEventArgs e) {
+            Athlete currentAthlete = (Athlete)athleteList.SelectedItem;
+            currentAthlete.firstName = athleteFName.Text;
+            currentAthlete.lastName = athleteLName.Text;
+            if ((bool)athleteMale.IsChecked)
+                currentAthlete.AthleteGender = 'M';
+            else
+                currentAthlete.AthleteGender = 'F';
+            currentAthlete.AthleteTeam = (Team)athleteTeam.SelectedItem;
+
+            currentAthlete.updateRecord();
+        }
+
+        private void athleteRevert_Click(object sender, RoutedEventArgs e) {
+            Athlete currentAthlete = (Athlete)athleteList.SelectedItem;
+            athleteFName.Text = currentAthlete.firstName;
+            athleteLName.Text = currentAthlete.lastName;
+
+            if (currentAthlete.AthleteGender == 'M')
+                athleteMale.IsChecked = true;
+            else
+                athleteFemale.IsChecked = true;
+
+            athleteTeam.ItemsSource = m.MeetTeams;
+            athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            m.close();
         }
     }
 }

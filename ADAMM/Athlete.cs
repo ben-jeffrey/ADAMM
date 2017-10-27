@@ -22,6 +22,10 @@ namespace ADAMM
             MeetDB = db;
         }
 
+        public void updateRecord() {
+            MeetDB.updateAthleteRecord(this);
+        }
+
         public override string ToString() {
             return number + " " + AthleteTeam.TeamNumber + " " + firstName + " " + lastName;
         }

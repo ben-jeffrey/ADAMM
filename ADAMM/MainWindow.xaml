@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADMAC"
         mc:Ignorable="d"
+        Closing="Window_Closing"
         Title="MainWindow" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid>
         <TabControl x:Name="tabControl" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto">
@@ -54,7 +55,9 @@
                         <RadioButton x:Name="athleteFemale" GroupName="athleteGender" Content="Female" HorizontalAlignment="Left" Margin="60,90,0,0" VerticalAlignment="Top"/>
                         <ComboBox x:Name="athleteTeam" HorizontalAlignment="Left" Margin="50,110,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="longName"/>
                         <Label Content="Team:" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" />
-
+                        <Button Content="Update" HorizontalAlignment="Left" Height="25" Margin="10,400,0,0" VerticalAlignment="Top" Width="50" Click="athleteUpdate_Click"/>
+                        <Button Content="Revert" HorizontalAlignment="Left" Height="25" Margin="70,400,0,0" VerticalAlignment="Top" Width="50" Click="athleteRevert_Click"/>
+                    
                     </Grid>
                 </Grid>
             </TabItem>
