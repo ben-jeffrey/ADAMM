@@ -16,7 +16,8 @@
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="eventList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="eventList_SelectionChanged" Height="Auto" Width="Auto">
+                    <TextBox x:Name="eventSearch" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Margin="5,5,5,0" TextChanged="eventSearch_TextChanged" />
+                    <ListView x:Name="eventList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="eventList_SelectionChanged" Height="Auto" Width="Auto" Margin="0,32,0,0">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EventNumber}"/>
@@ -35,7 +36,8 @@
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="athleteList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="athleteList_SelectionChanged">
+                    <TextBox x:Name="athleteSearch" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Margin="5,5,5,0" TextChanged="athleteSearch_TextChanged" />
+                    <ListView x:Name="athleteList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="athleteList_SelectionChanged" Margin="0,32,0,0">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=number}"/>

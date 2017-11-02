@@ -28,11 +28,9 @@ namespace ADAMM
             foreach (Event e in m.MeetEvents) 
                 eventList.Items.Add(e);
 
-            foreach (Team t in m.MeetTeams) {
-                foreach (Athlete a in t.TeamRoster) {
+            foreach (Team t in m.MeetTeams)
+                foreach (Athlete a in t.TeamRoster)
                     athleteList.Items.Add(a);
-                }
-            }
         }
 
         private void eventList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -113,6 +111,21 @@ namespace ADAMM
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             m.close();
+        }
+
+        private void eventSearch_TextChanged(object sender, TextChangedEventArgs e) {
+            eventList.Items.Clear();
+            foreach (Event ev in m.MeetEvents)
+                if (ev.filter(eventSearch.Text))
+                    eventList.Items.Add(ev);
+        }
+
+        private void athleteSearch_TextChanged(object sender, TextChangedEventArgs e) {
+            athleteList.Items.Clear();
+            foreach (Team t in m.MeetTeams)
+                foreach (Athlete a in t.TeamRoster)
+                    if (a.filter(athleteSearch.Text))
+                        athleteList.Items.Add(a);
         }
     }
 }

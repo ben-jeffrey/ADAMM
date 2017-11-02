@@ -49,6 +49,10 @@ namespace ADAMM
             return entries;
         }
 
+        public bool filter(String filter) {
+            return EventNumber.ToString().Contains(filter);
+        }
+
         public override string ToString() {
             string gender = EventGender == 'M' ? "Men's" : "Women's";
             string type = EventType == 'T' ? " Run" : " Jump";

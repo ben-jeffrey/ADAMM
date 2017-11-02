@@ -26,6 +26,10 @@ namespace ADAMM
             MeetDB.updateAthleteRecord(this);
         }
 
+        public bool filter(String filter) {
+            return firstName.Contains(filter) || lastName.Contains(filter);
+        }
+
         public override string ToString() {
             return number + " " + AthleteTeam.TeamNumber + " " + firstName + " " + lastName;
         }

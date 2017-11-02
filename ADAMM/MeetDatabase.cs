@@ -30,7 +30,7 @@ namespace ADAMM {
 
         public void close() {
             DB.Close();
-            File.Copy("db.mdb", originalFilePath, true);
+            //File.Copy("db.mdb", originalFilePath, true);
         }
 
         public String[] getMeetInfo() {
