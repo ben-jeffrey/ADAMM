@@ -40,9 +40,9 @@
                     <ListView x:Name="athleteList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="athleteList_SelectionChanged" Margin="0,32,0,0">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=number}"/>
-                                <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=firstName}"/>
-                                <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=lastName}"/>
+                                <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=AthleteNumber}"/>
+                                <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=AthleteFirstName}"/>
+                                <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=AthleteLastName}"/>
                                 <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=AthleteTeam.longName}"/>
                             </GridView>
                         </ListView.View>

@@ -23,7 +23,7 @@ namespace ADAMM
         Meet m;
         public MainWindow() {
             InitializeComponent();
-            m = new Meet("C:\\Users\\PinQiblo2\\Desktop\\db.mdb");
+            m = new Meet("C:\\Users\\PinQiblo2\\Desktop\\db.zip");
             Title = m.ToString();
             foreach (Event e in m.MeetEvents) 
                 eventList.Items.Add(e);
@@ -70,8 +70,8 @@ namespace ADAMM
 
         private void athleteList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             Athlete currentAthlete = (Athlete)e.AddedItems[0];
-            athleteFName.Text = currentAthlete.firstName;
-            athleteLName.Text = currentAthlete.lastName;
+            athleteFName.Text = currentAthlete.AthleteFirstName;
+            athleteLName.Text = currentAthlete.AthleteLastName;
 
             if (currentAthlete.AthleteGender == 'M')
                 athleteMale.IsChecked = true;
@@ -84,8 +84,8 @@ namespace ADAMM
 
         private void athleteUpdate_Click(object sender, RoutedEventArgs e) {
             Athlete currentAthlete = (Athlete)athleteList.SelectedItem;
-            currentAthlete.firstName = athleteFName.Text;
-            currentAthlete.lastName = athleteLName.Text;
+            currentAthlete.AthleteFirstName = athleteFName.Text;
+            currentAthlete.AthleteLastName = athleteLName.Text;
             if ((bool)athleteMale.IsChecked)
                 currentAthlete.AthleteGender = 'M';
             else
@@ -97,8 +97,8 @@ namespace ADAMM
 
         private void athleteRevert_Click(object sender, RoutedEventArgs e) {
             Athlete currentAthlete = (Athlete)athleteList.SelectedItem;
-            athleteFName.Text = currentAthlete.firstName;
-            athleteLName.Text = currentAthlete.lastName;
+            athleteFName.Text = currentAthlete.AthleteFirstName;
+            athleteLName.Text = currentAthlete.AthleteLastName;
 
             if (currentAthlete.AthleteGender == 'M')
                 athleteMale.IsChecked = true;

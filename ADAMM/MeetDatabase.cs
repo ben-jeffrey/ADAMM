@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Odbc;
 using System.IO;
+using System.IO.Compression;
 
 namespace ADAMM {
     class MeetDatabase {
@@ -12,10 +13,11 @@ namespace ADAMM {
         private String originalFilePath;
 
         public MeetDatabase(string dbFilePath) {
-            File.Copy(dbFilePath, "db.mdb", true);
+            //File.Copy(dbFilePath, "db.mdb", true);
+            ZipFile.ExtractToDirectory(dbFilePath, "/db");
             originalFilePath = dbFilePath;
             DB = new OdbcConnection();
-            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=db.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;ExtendedAnsiSQL=1;";
+            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=/db/db.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
             DB.ConnectionString = connectionString;
             DB.Open();
         }
@@ -30,7 +32,8 @@ namespace ADAMM {
 
         public void close() {
             DB.Close();
-            //File.Copy("db.mdb", originalFilePath, true);
+            File.Delete(originalFilePath);
+            ZipFile.CreateFromDirectory("db", originalFilePath);
         }
 
         public String[] getMeetInfo() {
@@ -88,15 +91,21 @@ namespace ADAMM {
         public void updateAthleteRecord(Athlete ath) {
             OdbcCommand com = new OdbcCommand(
                 String.Format("UPDATE Athlete SET First_name='{0}', Last_name='{1}', Ath_sex='{2}', Team_no={3} WHERE Ath_no = {4};",
-                ath.firstName, ath.lastName, ath.AthleteGender, ath.AthleteTeam.TeamNumber, ath.number));
+                ath.AthleteFirstName, ath.AthleteLastName, ath.AthleteGender, ath.AthleteTeam.TeamNumber, ath.AthleteNumber));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            finishUpdate();
         }
         public void updateTeamRecord() {
 
         }
         public void updateEventRecord() {
 
+        }
+
+        private void finishUpdate() {
+            File.Delete(originalFilePath);
+            ZipFile.CreateFromDirectory("db", originalFilePath);
         }
     }
 }

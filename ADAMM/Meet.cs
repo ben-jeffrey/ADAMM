@@ -35,7 +35,7 @@ namespace ADAMM
                 for (int i = 1; i <= currentEvent.EventPositionCount; i++) {
                     if (h.ContainsKey(i)) {
                         Athlete a = findAthlete(h[i]);
-                        eventEntries.Add(i + " " + a.firstName + " " + a.lastName);
+                        eventEntries.Add(i + " " + a.AthleteFirstName + " " + a.AthleteLastName);
                     } else {
                         eventEntries.Add(i.ToString());
                     }
