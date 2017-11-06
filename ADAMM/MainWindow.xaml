@@ -43,6 +43,7 @@
                                 <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=AthleteNumber}"/>
                                 <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=AthleteFirstName}"/>
                                 <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=AthleteLastName}"/>
+                                <GridViewColumn Header="Sex" DisplayMemberBinding="{Binding Path=AthleteGender}"/>
                                 <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=AthleteTeam.longName}"/>
                             </GridView>
                         </ListView.View>
@@ -57,9 +58,18 @@
                         <RadioButton x:Name="athleteFemale" GroupName="athleteGender" Content="Female" HorizontalAlignment="Left" Margin="60,90,0,0" VerticalAlignment="Top"/>
                         <ComboBox x:Name="athleteTeam" HorizontalAlignment="Left" Margin="50,110,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="longName"/>
                         <Label Content="Team:" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" />
-                        <Button Content="Update" HorizontalAlignment="Left" Height="25" Margin="10,400,0,0" VerticalAlignment="Top" Width="50" Click="athleteUpdate_Click"/>
-                        <Button Content="Revert" HorizontalAlignment="Left" Height="25" Margin="70,400,0,0" VerticalAlignment="Top" Width="50" Click="athleteRevert_Click"/>
-                    
+
+                        <ListView x:Name="athleteEvents" HorizontalAlignment="Stretch" Height="Auto" Margin="15,150,15,90" VerticalAlignment="Stretch" Width="Auto">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EventNumber}"/>
+                                    <GridViewColumn Header="Event Name" DisplayMemberBinding="{Binding Path=EventName}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <Button Content="Update" HorizontalAlignment="Left" Height="25" Margin="10,0,0,50" VerticalAlignment="Bottom" Width="50" Click="athleteUpdate_Click"/>
+                        <Button Content="Revert" HorizontalAlignment="Left" Height="25" Margin="70,0,0,50" VerticalAlignment="Bottom" Width="50" Click="athleteRevert_Click"/>
                     </Grid>
                 </Grid>
             </TabItem>

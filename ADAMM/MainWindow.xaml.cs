@@ -25,7 +25,7 @@ namespace ADAMM
             InitializeComponent();
             m = new Meet("C:\\Users\\PinQiblo2\\Desktop\\db.zip");
             Title = m.ToString();
-            foreach (Event e in m.MeetEvents) 
+            foreach (Event e in m.MeetEvents)
                 eventList.Items.Add(e);
 
             foreach (Team t in m.MeetTeams)
@@ -80,6 +80,10 @@ namespace ADAMM
 
             athleteTeam.ItemsSource = m.MeetTeams;
             athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
+
+            athleteEvents.Items.Clear();
+            foreach (Event ev in m.getEntriesForAthlete(currentAthlete))
+                athleteEvents.Items.Add(ev);
         }
 
         private void athleteUpdate_Click(object sender, RoutedEventArgs e) {

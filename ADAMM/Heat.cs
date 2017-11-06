@@ -29,5 +29,12 @@ namespace ADAMM {
         public void addCompetitor(int ath, int lane) {
             LaneAthletes.Add(lane, ath);
         }
+
+        public bool containsAthlete(Athlete a) {
+            foreach (KeyValuePair<int, int> l in LaneAthletes) 
+                if (l.Value == a.AthleteNumber)
+                    return true;
+            return false;
+        }
     }
 }

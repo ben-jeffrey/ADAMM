@@ -53,6 +53,20 @@ namespace ADAMM
             return EventNumber.ToString().Contains(filter);
         }
 
+        public bool isEligible(Athlete a) {
+            if (a.AthleteGender == EventGender)
+                return true;
+            else
+                return false;
+        }
+
+        public bool containsAthlete(Athlete a) {
+            foreach (Heat h in EventHeats)
+                if (h.containsAthlete(a))
+                    return true;
+            return false;
+        }
+
         public override string ToString() {
             string gender = EventGender == 'M' ? "Men's" : "Women's";
             string type = EventType == 'T' ? " Run" : " Jump";

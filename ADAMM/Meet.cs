@@ -48,6 +48,14 @@ namespace ADAMM
             return eventEntries;
         }
 
+        public List<Event> getEntriesForAthlete(Athlete a) {
+            List<Event> entries = new List<Event>();
+            foreach (Event e in MeetEvents)
+                if (e.isEligible(a) && e.containsAthlete(a))
+                    entries.Add(e);
+            return entries;
+        }
+
         private Athlete findAthlete(int athNum) {
             Athlete found = null;
             foreach (Team t in MeetTeams) {
