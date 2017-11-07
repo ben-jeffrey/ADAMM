@@ -8,7 +8,7 @@ using System.Data.Odbc;
 namespace ADAMM
 {
     class Meet {
-        private MeetDatabase MeetDB;
+        public MeetDatabase MeetDB { get; }
         private String MeetName;
         private String MeetDate;
         public List<Event> MeetEvents { get; set; }
@@ -19,6 +19,12 @@ namespace ADAMM
             String[] meetInfo = MeetDB.getMeetInfo();
             MeetName = meetInfo[0];
             MeetDate = meetInfo[1];
+
+            Athlete.MeetDB = MeetDB;
+            Event.MeetDB = MeetDB;
+            Team.MeetDB = MeetDB;
+            Heat.MeetDB = MeetDB;
+
             MeetEvents = MeetDB.createEvents();
             MeetTeams = MeetDB.createTeams();
         }
@@ -64,6 +70,17 @@ namespace ADAMM
                     break;
             }
             return found;
+        }
+
+        public Athlete addNewAthlete() {
+            Athlete newAthlete = new Athlete(0, 0, "", "", 'M');
+
+            newAthlete.AthleteTeam = MeetTeams[0];
+            newAthlete.AthleteTeam.TeamRoster.Add(newAthlete);
+
+            MeetDB.insertNewAthlete(newAthlete);
+
+            return newAthlete;
         }
 
         public void close() {

@@ -8,13 +8,12 @@ namespace ADAMM {
     class Heat {
         private int EventNum;
         private int HeatNum;
-        private MeetDatabase MeetDB;
+        public static MeetDatabase MeetDB;
         public Dictionary<int, int> LaneAthletes { get; }
 
-        public Heat(int evt, int ht, MeetDatabase db) {
+        public Heat(int evt, int ht) {
             EventNum = evt;
             HeatNum = ht;
-            MeetDB = db;
             LaneAthletes = new Dictionary<int, int>();
         }
 
@@ -32,7 +31,7 @@ namespace ADAMM {
 
         public bool containsAthlete(Athlete a) {
             foreach (KeyValuePair<int, int> l in LaneAthletes) 
-                if (l.Value == a.AthleteNumber)
+                if (l.Value == a.AthletePointer)
                     return true;
             return false;
         }

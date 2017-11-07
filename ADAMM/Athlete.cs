@@ -9,11 +9,13 @@ using System.Runtime.CompilerServices;
 namespace ADAMM
 {
     class Athlete : INotifyPropertyChanged {
-        private static MeetDatabase MeetDB;
+        public static MeetDatabase MeetDB;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int AthleteNumber { get { return number; } set { number = value; OnPropertyChanged(); } }
         private int number;
+        public int AthletePointer { get { return pointer;} set { pointer = value; OnPropertyChanged(); } }
+        private int pointer;
         public Team AthleteTeam { get { return team; } set { team = value; OnPropertyChanged(); } }
         private Team team;
         public string AthleteFirstName { get { return firstName; } set { firstName = value; OnPropertyChanged(); } }
@@ -23,12 +25,13 @@ namespace ADAMM
         public char AthleteGender { get { return gender; } set { gender = value; OnPropertyChanged(); } }
         private char gender;
 
-        public Athlete(int ath, String fname, String lname, Char gender, MeetDatabase db) {
-            number = ath;
+        public Athlete(int comp, int ath, String fname, String lname, Char sex) {
+            number = comp;
+            pointer = ath;
             firstName = fname.Trim();
             lastName = lname.Trim();
-            AthleteGender = gender;
-            MeetDB = db;
+            gender = sex;
+            team = null;
         }
 
         public void updateRecord() {

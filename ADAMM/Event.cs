@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ADAMM
 {
     class Event {
-        private static MeetDatabase MeetDB;
+        public static MeetDatabase MeetDB;
         public int EventNumber { get; }
         public int EventPointer { get; }
         public String EventName { get; }
@@ -17,13 +17,12 @@ namespace ADAMM
         private List<Heat> EventHeats { get; set; }
         private int level { get; set; }
 
-        public Event(int number, int ptr, char gender, char trkfld, int posCount, MeetDatabase db) {
+        public Event(int number, int ptr, char gender, char trkfld, int posCount) {
             EventNumber = number;
             EventPointer = ptr;
             EventGender = gender;
             EventType = trkfld;
             EventPositionCount = posCount;
-            MeetDB = db;
             EventHeats = new List<Heat>();
             EventName = ToString();
             createHeats();
@@ -35,7 +34,7 @@ namespace ADAMM
             foreach (int[] entry in entries) {
                 if (entry[1] != currentHeat) {
                     currentHeat = entry[1];
-                    EventHeats.Add(new Heat(EventNumber, currentHeat, MeetDB));
+                    EventHeats.Add(new Heat(EventNumber, currentHeat));
                 }
                 EventHeats.Last().addCompetitor(entry[0], entry[2]);
             }

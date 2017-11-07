@@ -90,11 +90,16 @@ namespace ADAMM
             Athlete currentAthlete = (Athlete)athleteList.SelectedItem;
             currentAthlete.AthleteFirstName = athleteFName.Text;
             currentAthlete.AthleteLastName = athleteLName.Text;
+
             if ((bool)athleteMale.IsChecked)
                 currentAthlete.AthleteGender = 'M';
             else
                 currentAthlete.AthleteGender = 'F';
+
+            if (currentAthlete.AthleteTeam != null)
+                currentAthlete.AthleteTeam.TeamRoster.Remove(currentAthlete);
             currentAthlete.AthleteTeam = (Team)athleteTeam.SelectedItem;
+            currentAthlete.AthleteTeam.TeamRoster.Add(currentAthlete);
 
             currentAthlete.updateRecord();
         }
@@ -106,7 +111,7 @@ namespace ADAMM
 
             if (currentAthlete.AthleteGender == 'M')
                 athleteMale.IsChecked = true;
-            else
+            else if (currentAthlete.AthleteGender == 'F')
                 athleteFemale.IsChecked = true;
 
             athleteTeam.ItemsSource = m.MeetTeams;
@@ -130,6 +135,13 @@ namespace ADAMM
                 foreach (Athlete a in t.TeamRoster)
                     if (a.filter(athleteSearch.Text))
                         athleteList.Items.Add(a);
+        }
+
+        private void athleteAdd_Click(object sender, RoutedEventArgs e) {
+            Athlete newAthlete = m.addNewAthlete();
+            athleteList.Items.Add(newAthlete);
+            athleteList.SelectedItem = newAthlete;
+            athleteList.ScrollIntoView(newAthlete);
         }
     }
 }

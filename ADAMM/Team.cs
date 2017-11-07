@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 namespace ADAMM
 {
     class Team {
-        private static MeetDatabase MeetDB;
+        public static MeetDatabase MeetDB;
         public List<Athlete> TeamRoster { get; }
         public int TeamNumber { get; }
         public string longName { get; }
         private string shortName { get; set; }
         private string abbreviation { get; set; }
 
-        public Team(int num, String lName, String sName, String abbr, MeetDatabase db) {
+        public Team(int num, String lName, String sName, String abbr) {
             TeamNumber = num;
             longName = lName;
             shortName = sName;
             abbreviation = abbr;
-            MeetDB = db;
             TeamRoster = MeetDB.createTeamRoster(TeamNumber);
             foreach (Athlete a in TeamRoster)
                 a.AthleteTeam = this;

@@ -50,7 +50,7 @@ namespace ADAMM {
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                events.Add(new Event(r.GetInt32(0), r.GetInt32(1), r.GetChar(2), r.GetChar(3), r.GetInt32(4), this));
+                events.Add(new Event(r.GetInt32(0), r.GetInt32(1), r.GetChar(2), r.GetChar(3), r.GetInt32(4)));
             }
             return events;
         }
@@ -61,18 +61,18 @@ namespace ADAMM {
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3), this));
+                teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3)));
             }
             return teams;
         }
 
         public List<Athlete> createTeamRoster(int teamNum) {
             List<Athlete> athletes = new List<Athlete>();
-            OdbcCommand com = new OdbcCommand("SELECT Ath_no, First_name, Last_name, Ath_Sex  FROM Athlete WHERE Team_no = " + teamNum);
+            OdbcCommand com = new OdbcCommand("SELECT Comp_no, Ath_no, First_name, Last_name, Ath_Sex  FROM Athlete WHERE Team_no = " + teamNum);
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                athletes.Add(new Athlete(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetChar(3), this));
+                athletes.Add(new Athlete(r.GetInt32(0), r.GetInt32(1), r.GetString(2), r.GetString(3), r.GetChar(4)));
             }
             return athletes;
         }
@@ -91,7 +91,7 @@ namespace ADAMM {
         public void updateAthleteRecord(Athlete ath) {
             OdbcCommand com = new OdbcCommand(
                 String.Format("UPDATE Athlete SET First_name='{0}', Last_name='{1}', Ath_sex='{2}', Team_no={3} WHERE Ath_no = {4};",
-                ath.AthleteFirstName, ath.AthleteLastName, ath.AthleteGender, ath.AthleteTeam.TeamNumber, ath.AthleteNumber));
+                ath.AthleteFirstName, ath.AthleteLastName, ath.AthleteGender, ath.AthleteTeam.TeamNumber, ath.AthletePointer));
             com.Connection = DB;
             com.ExecuteNonQuery();
             finishUpdate();
@@ -101,6 +101,26 @@ namespace ADAMM {
         }
         public void updateEventRecord() {
 
+        }
+
+        public void insertNewAthlete(Athlete ath) {
+            OdbcCommand com = new OdbcCommand("SELECT MAX(Comp_no) FROM Athlete");
+            com.Connection = DB;
+            OdbcDataReader r = com.ExecuteReader();
+            r.Read();
+            ath.AthleteNumber = r.GetInt32(0) + 1;
+            r.Close();
+
+            com.CommandText = String.Format("INSERT INTO Athlete (First_name, Last_name, Ath_sex, Comp_no, Team_no) VALUES ('{0}', '{1}', '{2}', {3}, {4});",
+                ath.AthleteFirstName, ath.AthleteLastName, ath.AthleteGender, ath.AthleteNumber, ath.AthleteTeam.TeamNumber);
+            com.ExecuteNonQuery();
+
+            com.CommandText = "SELECT Ath_no FROM Athlete WHERE Comp_no = " + ath.AthleteNumber + ";";
+            r = com.ExecuteReader();
+            r.Read();
+            ath.AthletePointer = r.GetInt32(0);
+
+            finishUpdate();
         }
 
         private void finishUpdate() {
