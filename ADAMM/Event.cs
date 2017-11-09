@@ -14,15 +14,19 @@ namespace ADAMM
         private char EventGender { get; set; }
         private char EventType { get; set; }
         public int EventPositionCount { get; }
+        public bool EventSelected { get; set; }
         private List<Heat> EventHeats { get; set; }
+        public Division EventDivision { get; set; }
         private int level { get; set; }
 
-        public Event(int number, int ptr, char gender, char trkfld, int posCount) {
+        public Event(int number, int ptr, char gender, char trkfld, int posCount, Division div) {
             EventNumber = number;
             EventPointer = ptr;
             EventGender = gender;
             EventType = trkfld;
             EventPositionCount = posCount;
+            EventDivision = div;
+            EventSelected = false;
             EventHeats = new List<Heat>();
             EventName = ToString();
             createHeats();
@@ -53,10 +57,7 @@ namespace ADAMM
         }
 
         public bool isEligible(Athlete a) {
-            if (a.AthleteGender == EventGender)
-                return true;
-            else
-                return false;
+            return a.AthleteGender == EventGender && a.AthleteDivision == EventDivision;
         }
 
         public bool containsAthlete(Athlete a) {
@@ -64,6 +65,10 @@ namespace ADAMM
                 if (h.containsAthlete(a))
                     return true;
             return false;
+        }
+
+        public static bool staticContainsAthlete(Event e, Athlete a) {
+            return e.containsAthlete(a);
         }
 
         public override string ToString() {

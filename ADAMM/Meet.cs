@@ -13,6 +13,7 @@ namespace ADAMM
         private String MeetDate;
         public List<Event> MeetEvents { get; set; }
         public List<Team> MeetTeams { get; set; }
+        public List<Division> MeetDivisions { get; set; }
 
         public Meet(string dbFilePath) {
             MeetDB = new MeetDatabase(dbFilePath);
@@ -25,8 +26,9 @@ namespace ADAMM
             Team.MeetDB = MeetDB;
             Heat.MeetDB = MeetDB;
 
-            MeetEvents = MeetDB.createEvents();
-            MeetTeams = MeetDB.createTeams();
+            MeetDivisions = MeetDB.createDivisions();
+            MeetEvents = MeetDB.createEvents(MeetDivisions);
+            MeetTeams = MeetDB.createTeams(MeetDivisions);
         }
 
         public List<String> getEntriesForEvent(int eventNum) {
@@ -57,7 +59,15 @@ namespace ADAMM
         public List<Event> getEntriesForAthlete(Athlete a) {
             List<Event> entries = new List<Event>();
             foreach (Event e in MeetEvents)
-                if (e.isEligible(a) && e.containsAthlete(a))
+                if (e.containsAthlete(a))
+                    entries.Add(e);
+            return entries;
+        }
+
+        public List<Event> getEligibleEventsForAthlete(Athlete a) {
+            List<Event> entries = new List<Event>();
+            foreach (Event e in MeetEvents)
+                if (e.isEligible(a))
                     entries.Add(e);
             return entries;
         }
@@ -73,7 +83,7 @@ namespace ADAMM
         }
 
         public Athlete addNewAthlete() {
-            Athlete newAthlete = new Athlete(0, 0, "", "", 'M');
+            Athlete newAthlete = new Athlete(0, 0, "", "", 'M', null);
 
             newAthlete.AthleteTeam = MeetTeams[0];
             newAthlete.AthleteTeam.TeamRoster.Add(newAthlete);

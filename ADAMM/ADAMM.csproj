@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Division.cs" />
     <Compile Include="Heat.cs" />
     <Compile Include="MeetDatabase.cs" />
     <Compile Include="Team.cs" />

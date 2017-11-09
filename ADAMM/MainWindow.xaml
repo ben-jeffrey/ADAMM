@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ADMAC"
+        xmlns:local="clr-namespace:ADAMM"
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="MainWindow" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -41,7 +41,7 @@
                     <TabControl x:Name="heatTabs" Grid.Column="2" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Athletes">
+            <TabItem Header="Athletes" Height="23" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -73,14 +73,41 @@
                         <ComboBox x:Name="athleteTeam" HorizontalAlignment="Left" Margin="50,110,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="longName"/>
                         <Label Content="Team:" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" />
 
-                        <ListView x:Name="athleteEvents" AlternationCount="2" HorizontalAlignment="Stretch" Height="Auto" Margin="15,150,15,90" VerticalAlignment="Stretch" Width="Auto">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EventNumber}"/>
-                                    <GridViewColumn Header="Event Name" DisplayMemberBinding="{Binding Path=EventName}" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Height="auto" Margin="0,150,0,90">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ListBox x:Name="athleteEligibleEvents" Grid.Column="0" HorizontalAlignment="Stretch" Height="auto" Margin="10,0,5,0" VerticalAlignment="Stretch" Width="auto">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Path=EventNumber}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Path=EventName}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <ListBox x:Name="athleteEnteredEvents" Grid.Column="1" HorizontalAlignment="Stretch" Height="auto" Margin="5,0,10,0" VerticalAlignment="Stretch" Width="auto">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Path=EventNumber}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Path=EventName}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
 
                         <Button Content="Update" HorizontalAlignment="Left" Height="25" Margin="10,0,0,50" VerticalAlignment="Bottom" Width="50" Click="athleteUpdate_Click"/>
                         <Button Content="Revert" HorizontalAlignment="Left" Height="25" Margin="70,0,0,50" VerticalAlignment="Bottom" Width="50" Click="athleteRevert_Click"/>

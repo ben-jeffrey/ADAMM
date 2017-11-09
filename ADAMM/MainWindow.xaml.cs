@@ -81,9 +81,13 @@ namespace ADAMM
             athleteTeam.ItemsSource = m.MeetTeams;
             athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
 
-            athleteEvents.Items.Clear();
+            athleteEnteredEvents.Items.Clear();
+            athleteEligibleEvents.Items.Clear();
             foreach (Event ev in m.getEntriesForAthlete(currentAthlete))
-                athleteEvents.Items.Add(ev);
+                athleteEnteredEvents.Items.Add(ev);
+            foreach (Event ev in m.getEligibleEventsForAthlete(currentAthlete)) 
+                athleteEligibleEvents.Items.Add(ev);
+            
         }
 
         private void athleteUpdate_Click(object sender, RoutedEventArgs e) {

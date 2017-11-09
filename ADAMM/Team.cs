@@ -14,12 +14,12 @@ namespace ADAMM
         private string shortName { get; set; }
         private string abbreviation { get; set; }
 
-        public Team(int num, String lName, String sName, String abbr) {
+        public Team(int num, String lName, String sName, String abbr, List<Division> divisions) {
             TeamNumber = num;
             longName = lName;
             shortName = sName;
             abbreviation = abbr;
-            TeamRoster = MeetDB.createTeamRoster(TeamNumber);
+            TeamRoster = MeetDB.createTeamRoster(divisions, TeamNumber);
             foreach (Athlete a in TeamRoster)
                 a.AthleteTeam = this;
         }

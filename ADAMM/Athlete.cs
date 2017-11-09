@@ -24,13 +24,16 @@ namespace ADAMM
         private string lastName;
         public char AthleteGender { get { return gender; } set { gender = value; OnPropertyChanged(); } }
         private char gender;
+        public Division AthleteDivision { get { return division; } set { division = value; OnPropertyChanged(); } }
+        private Division division;
 
-        public Athlete(int comp, int ath, String fname, String lname, Char sex) {
+        public Athlete(int comp, int ath, String fname, String lname, Char sex, Division div) {
             number = comp;
             pointer = ath;
             firstName = fname.Trim();
             lastName = lname.Trim();
             gender = sex;
+            division = div;
             team = null;
         }
 

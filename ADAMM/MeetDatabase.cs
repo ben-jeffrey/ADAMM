@@ -44,37 +44,58 @@ namespace ADAMM {
             String[] info = new String[] { r.GetString(0), r.GetDate(1).ToString("M/d/yy")};
             return info;
         }
-        public List<Event> createEvents() {
+        public List<Event> createEvents(List<Division> divisions) {
             List<Event> events = new List<Event>();
-            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes FROM Event ORDER BY Event_no ASC");
+            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes, Div_no FROM Event ORDER BY Event_no ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                events.Add(new Event(r.GetInt32(0), r.GetInt32(1), r.GetChar(2), r.GetChar(3), r.GetInt32(4)));
+                Division eventDivision = null;
+                foreach (Division d in divisions)
+                    if (d.DivisionNumber == r.GetInt32(5))
+                        eventDivision = d;
+                events.Add(new Event(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetString(3)[0], r.GetInt16(4), eventDivision));
             }
             return events;
         }
 
-        public List<Team> createTeams() {
+        public List<Team> createTeams(List<Division> divisions) {
             List<Team> teams = new List<Team>();
             OdbcCommand com = new OdbcCommand("SELECT Team_no, Team_name, Team_abbr, Team_short FROM Team ORDER BY Team_name ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3)));
+                teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3), divisions));
             }
             return teams;
         }
 
-        public List<Athlete> createTeamRoster(int teamNum) {
+        public List<Athlete> createTeamRoster(List<Division> divisions, int teamNum) {
             List<Athlete> athletes = new List<Athlete>();
-            OdbcCommand com = new OdbcCommand("SELECT Comp_no, Ath_no, First_name, Last_name, Ath_Sex  FROM Athlete WHERE Team_no = " + teamNum);
+            OdbcCommand com = new OdbcCommand("SELECT Comp_no, Ath_no, First_name, Last_name, Ath_Sex, Ath_age  FROM Athlete WHERE Team_no = " + teamNum);
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                athletes.Add(new Athlete(r.GetInt32(0), r.GetInt32(1), r.GetString(2), r.GetString(3), r.GetChar(4)));
+                Division athleteDivision = null;
+                Console.WriteLine(r.GetValue(5).GetType());
+                foreach (Division d in divisions)
+                    if (d.DivisionAgeLow <= r.GetInt16(5) && r.GetInt16(5) <= d.DivisionAgeHigh)
+                        athleteDivision = d;
+                athletes.Add(new Athlete(r.GetInt32(0), r.GetInt32(1), r.GetString(2), r.GetString(3), r.GetString(4)[0], athleteDivision));
             }
             return athletes;
+        }
+
+        public List<Division> createDivisions() {
+            List<Division> divisions = new List<Division>();
+            OdbcCommand com = new OdbcCommand("SELECT Div_no, Div_name, low_age, high_age FROM Divisions;");
+            com.Connection = DB;
+            OdbcDataReader r = com.ExecuteReader();
+            while (r.Read()) {
+                if (!r.GetValue(2).GetType().Equals(typeof(DBNull)))
+                    divisions.Add(new Division(r.GetInt32(0), r.GetString(1), r.GetInt16(2), r.GetInt16(3)));
+            }
+            return divisions;
         }
 
         public List<int[]> getEntries(int eventPtr) {
