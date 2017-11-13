@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace ADAMM
 {
-    class Event {
+    class Event : IComparable {
         public static MeetDatabase MeetDB;
         public int EventNumber { get; }
         public int EventPointer { get; }
         public String EventName { get; }
         private char EventGender { get; set; }
-        private char EventType { get; set; }
+        public char EventType { get; set; }
         public int EventPositionCount { get; }
-        public bool EventSelected { get; set; }
-        private List<Heat> EventHeats { get; set; }
         public Division EventDivision { get; set; }
+        public char EventStatus { get; set; }
+        public List<Heat> EventHeats { get; set; }
         private int level { get; set; }
 
-        public Event(int number, int ptr, char gender, char trkfld, int posCount, Division div) {
+        public Event(int number, int ptr, char gender, char trkfld, int posCount, Division div, char stat) {
             EventNumber = number;
             EventPointer = ptr;
             EventGender = gender;
             EventType = trkfld;
             EventPositionCount = posCount;
             EventDivision = div;
-            EventSelected = false;
+            EventStatus = stat;
             EventHeats = new List<Heat>();
             EventName = ToString();
             createHeats();
@@ -38,7 +38,7 @@ namespace ADAMM
             foreach (int[] entry in entries) {
                 if (entry[1] != currentHeat) {
                     currentHeat = entry[1];
-                    EventHeats.Add(new Heat(EventNumber, currentHeat));
+                    EventHeats.Add(new Heat(this, currentHeat));
                 }
                 EventHeats.Last().addCompetitor(entry[0], entry[2]);
             }
@@ -67,8 +67,17 @@ namespace ADAMM
             return false;
         }
 
-        public static bool staticContainsAthlete(Event e, Athlete a) {
-            return e.containsAthlete(a);
+        public string StatusString() {
+            switch (EventStatus) {
+                case 'S':
+                    return "Scored";
+                case 'U':
+                    return "Unseeded";
+                case 'D':
+                    return "Done";
+                default:
+                    return "Unknown";
+            }
         }
 
         public override string ToString() {
@@ -77,5 +86,8 @@ namespace ADAMM
             return "Event #" + EventNumber + ", " + gender + type;
         }
 
+        public int CompareTo(object obj) {
+            return EventNumber.CompareTo(((Event)obj).EventNumber);
+        }
     }
 }

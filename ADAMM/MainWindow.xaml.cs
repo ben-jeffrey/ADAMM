@@ -33,9 +33,13 @@ namespace ADAMM
                     athleteList.Items.Add(a);
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            m.close();
+        }
+
         private void eventList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (e.AddedItems.Count - e.RemovedItems.Count <= 1) {
-                int selectedEvent = ((Event)e.AddedItems[0]).EventNumber;
+                Event selectedEvent = (Event)e.AddedItems[0];
                 List<String> selectedEntries = m.getEntriesForEvent(selectedEvent);
 
                 heatTabs.Items.Clear();
@@ -106,6 +110,11 @@ namespace ADAMM
             currentAthlete.AthleteTeam.TeamRoster.Add(currentAthlete);
 
             currentAthlete.updateRecord();
+
+            List<Event> entered = new List<Event>();
+            foreach (Event ev in athleteEnteredEvents.Items)
+                entered.Add(ev);
+            m.updateEntries(currentAthlete, entered);
         }
 
         private void athleteRevert_Click(object sender, RoutedEventArgs e) {
@@ -120,10 +129,6 @@ namespace ADAMM
 
             athleteTeam.ItemsSource = m.MeetTeams;
             athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-            m.close();
         }
 
         private void eventSearch_TextChanged(object sender, TextChangedEventArgs e) {
@@ -146,6 +151,24 @@ namespace ADAMM
             athleteList.Items.Add(newAthlete);
             athleteList.SelectedItem = newAthlete;
             athleteList.ScrollIntoView(newAthlete);
+        }
+
+        private void addEntry_Click(object sender, RoutedEventArgs e) {
+            Event currentEvent = (Event)athleteEligibleEvents.SelectedItem;
+            athleteEligibleEvents.Items.Remove(currentEvent);
+            athleteEnteredEvents.Items.Add(currentEvent);
+            athleteEnteredEvents.Items.SortDescriptions.Clear();
+            athleteEnteredEvents.Items.SortDescriptions.Add(
+                new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+        }
+
+        private void removeEntry_Click(object sender, RoutedEventArgs e) {
+            Event currentEvent = (Event)athleteEnteredEvents.SelectedItem;
+            athleteEnteredEvents.Items.Remove(currentEvent);
+            athleteEligibleEvents.Items.Add(currentEvent);
+            athleteEligibleEvents.Items.SortDescriptions.Clear();
+            athleteEligibleEvents.Items.SortDescriptions.Add(
+                new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
         }
     }
 }

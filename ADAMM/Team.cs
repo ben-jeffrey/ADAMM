@@ -27,7 +27,7 @@ namespace ADAMM
         public Athlete findAthlete(int athNum) {
             Athlete found = null;
             foreach (Athlete a in TeamRoster) {
-                if (athNum == a.AthleteNumber) {
+                if (athNum == a.AthletePointer) {
                     found = a;
                     break;
                 }

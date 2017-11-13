@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ADAMM {
     class Heat {
-        private int EventNum;
-        private int HeatNum;
+        public Event HeatEvent { get; set; }
+        public int HeatNumber { get; set; }
         public static MeetDatabase MeetDB;
         public Dictionary<int, int> LaneAthletes { get; }
 
-        public Heat(int evt, int ht) {
-            EventNum = evt;
-            HeatNum = ht;
+        public Heat(Event evt, int ht) {
+            HeatEvent = evt;
+            HeatNumber = ht;
             LaneAthletes = new Dictionary<int, int>();
         }
 
@@ -34,6 +34,10 @@ namespace ADAMM {
                 if (l.Value == a.AthletePointer)
                     return true;
             return false;
+        }
+
+        public bool full() {
+            return LaneAthletes.Keys.Max() >= HeatEvent.EventPositionCount;
         }
     }
 }

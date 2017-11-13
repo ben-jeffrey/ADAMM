@@ -14,10 +14,10 @@ namespace ADAMM {
 
         public MeetDatabase(string dbFilePath) {
             //File.Copy(dbFilePath, "db.mdb", true);
-            ZipFile.ExtractToDirectory(dbFilePath, "/db");
+            ZipFile.ExtractToDirectory(dbFilePath, "db");
             originalFilePath = dbFilePath;
             DB = new OdbcConnection();
-            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=/db/db.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
+            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=db/db.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
             DB.ConnectionString = connectionString;
             DB.Open();
         }
@@ -32,8 +32,8 @@ namespace ADAMM {
 
         public void close() {
             DB.Close();
-            File.Delete(originalFilePath);
-            ZipFile.CreateFromDirectory("db", originalFilePath);
+            finishUpdate();
+            File.Delete("db/db.mdb");
         }
 
         public String[] getMeetInfo() {
@@ -46,7 +46,7 @@ namespace ADAMM {
         }
         public List<Event> createEvents(List<Division> divisions) {
             List<Event> events = new List<Event>();
-            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes, Div_no FROM Event ORDER BY Event_no ASC");
+            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes, Div_no, Event_stat FROM Event ORDER BY Event_no ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
@@ -54,7 +54,7 @@ namespace ADAMM {
                 foreach (Division d in divisions)
                     if (d.DivisionNumber == r.GetInt32(5))
                         eventDivision = d;
-                events.Add(new Event(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetString(3)[0], r.GetInt16(4), eventDivision));
+                events.Add(new Event(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetString(3)[0], r.GetInt16(4), eventDivision, r.GetString(6)[0]));
             }
             return events;
         }
@@ -144,9 +144,28 @@ namespace ADAMM {
             finishUpdate();
         }
 
+        public void insertNewEntry(Athlete ath, Event ev, Heat he, int lane) {
+            char metric = ev.EventType == 'T' ? 'M' : 'E';
+            OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Entry (Event_ptr, Ath_no, ActSeed_course, ConvSeed_course, Hand_time, Fin_heat, Fin_lane)" +
+                "VALUES ({0}, {1}, '{2}', '{2}', FALSE, {3}, {4})",
+                ev.EventPointer, ath.AthletePointer, metric, he.HeatNumber, lane));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+            finishUpdate();
+        }
+
+        public void removeEntry(Athlete ath, Event ev) {
+            OdbcCommand com = new OdbcCommand(String.Format("DELETE FROM Entry WHERE Event_ptr={0} AND Ath_no={1}", ev.EventPointer, ath.AthletePointer));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+            finishUpdate();
+        }
+
         private void finishUpdate() {
+            File.Copy("db/db.mdb", "db/tmp/db.mdb");
             File.Delete(originalFilePath);
-            ZipFile.CreateFromDirectory("db", originalFilePath);
+            ZipFile.CreateFromDirectory("db/tmp", originalFilePath);
+            File.Delete("db/tmp/db.mdb");
         }
     }
 }

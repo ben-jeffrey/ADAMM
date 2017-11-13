@@ -31,13 +31,8 @@ namespace ADAMM
             MeetTeams = MeetDB.createTeams(MeetDivisions);
         }
 
-        public List<String> getEntriesForEvent(int eventNum) {
+        public List<String> getEntriesForEvent(Event currentEvent) {
             List<String> eventEntries = new List<string>();
-            Event currentEvent = null;
-            foreach (Event e in MeetEvents)
-                if (e.EventNumber == eventNum)
-                    currentEvent = e;
-
             List<Dictionary<int, int>> heatEntries = currentEvent.getHeatEntries();
             foreach (Dictionary<int, int> h in heatEntries) {
                 for (int i = 1; i <= currentEvent.EventPositionCount; i++) {
@@ -67,7 +62,7 @@ namespace ADAMM
         public List<Event> getEligibleEventsForAthlete(Athlete a) {
             List<Event> entries = new List<Event>();
             foreach (Event e in MeetEvents)
-                if (e.isEligible(a))
+                if (e.isEligible(a) && !e.containsAthlete(a))
                     entries.Add(e);
             return entries;
         }
@@ -91,6 +86,46 @@ namespace ADAMM
             MeetDB.insertNewAthlete(newAthlete);
 
             return newAthlete;
+        }
+
+        public void updateEntries(Athlete a, List<Event> events) {
+            foreach (Event e in events)
+                if (!e.containsAthlete(a))
+                    addAthleteToEvent(a, e);
+            foreach (Event e in getEntriesForAthlete(a)) {
+                if (!events.Contains(e))
+                    removeAthleteFromEvent(a, e);
+            }
+        }
+
+        public void addAthleteToEvent(Athlete a, Event e) {
+            if (e.EventStatus != 'U')
+                foreach (Heat h in e.EventHeats)
+                    if (!h.full()) {
+                        for (int l = 1; l <= h.HeatEvent.EventPositionCount; l++)
+                            if (!h.LaneAthletes.Keys.Contains(l)) {
+                                h.LaneAthletes.Add(l, a.AthletePointer);
+                                MeetDB.insertNewEntry(a, e, h, l);
+                                break;
+                            }
+                        break;
+                    }
+        }
+
+        public void removeAthleteFromEvent(Athlete a, Event e) {
+            if (e.EventStatus != 'U') {
+                foreach (Heat h in e.EventHeats)
+                    if (h.containsAthlete(a)) {
+                        foreach (KeyValuePair<int, int> l in h.LaneAthletes)
+                            if (l.Value == a.AthletePointer) {
+                                h.LaneAthletes.Remove(l.Key);
+                                MeetDB.removeEntry(a, e);
+                                break;
+                            }
+                        break;
+                    }
+            }
+
         }
 
         public void close() {

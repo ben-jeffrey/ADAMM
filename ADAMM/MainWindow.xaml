@@ -9,13 +9,26 @@
         Title="MainWindow" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid>
         <Grid.Resources>
-            <Style TargetType="ListViewItem">
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <Style TargetType="ListViewItem" x:Key="ListViewColors">
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
                         <Setter Property="Background" Value="White" />
                     </Trigger>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                         <Setter Property="Background" Value="LightGray" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="ListBoxItem">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="LightGray" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -34,6 +47,7 @@
                             <GridView>
                                 <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EventNumber}"/>
                                 <GridViewColumn Header="Event Name" DisplayMemberBinding="{Binding Path=EventName}" />
+                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=StatusString}" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -78,31 +92,39 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ListBox x:Name="athleteEligibleEvents" Grid.Column="0" HorizontalAlignment="Stretch" Height="auto" Margin="10,0,5,0" VerticalAlignment="Stretch" Width="auto">
+                            <ListBox x:Name="athleteEligibleEvents" Grid.Column="0" AlternationCount="2" HorizontalAlignment="Stretch" Height="auto" Margin="10,0,5,0" VerticalAlignment="Stretch" Width="auto">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid>
+                                        <Grid HorizontalAlignment="Stretch" Width="Auto">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="30"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="20" />
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="{Binding Path=EventNumber}" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Path=EventName}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Path=EventName}" HorizontalAlignment="Stretch" Width="Auto" />
+                                            <Button Grid.Column="2" Content="+" FontSize="8pt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20"
+                                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected, Converter={StaticResource BoolToVis}}"
+                                                    Click="addEntry_Click"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
-                            <ListBox x:Name="athleteEnteredEvents" Grid.Column="1" HorizontalAlignment="Stretch" Height="auto" Margin="5,0,10,0" VerticalAlignment="Stretch" Width="auto">
+                            <ListBox x:Name="athleteEnteredEvents" Grid.Column="1" AlternationCount="2" HorizontalAlignment="Stretch" Height="auto" Margin="5,0,10,0" VerticalAlignment="Stretch" Width="auto">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="30"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="20" />
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="{Binding Path=EventNumber}" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Path=EventName}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Path=EventName}" HorizontalAlignment="Stretch" Width="Auto" />
+                                            <Button Grid.Column="2" Content="-" FontSize="8pt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20"
+                                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected, Converter={StaticResource BoolToVis}}" 
+                                                    Click="removeEntry_Click"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
