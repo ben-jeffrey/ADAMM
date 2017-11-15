@@ -45,9 +45,10 @@
                     <ListView x:Name="eventList" AlternationCount="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="eventList_SelectionChanged" Height="Auto" Width="Auto" Margin="0,32,0,0">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EventNumber}"/>
-                                <GridViewColumn Header="Event Name" DisplayMemberBinding="{Binding Path=EventName}" />
-                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=StatusString}" />
+                                <GridViewColumn Header="Event #" DisplayMemberBinding="{Binding Path=EventNumber}" />
+                                <GridViewColumn Header="Event Name" Width="300" />
+                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=EventStatus}" Width="100"/>
+                                <GridViewColumn Header="Heats" DisplayMemberBinding="{Binding Path=EventHeats.Count}" />
                             </GridView>
                         </ListView.View>
                     </ListView>

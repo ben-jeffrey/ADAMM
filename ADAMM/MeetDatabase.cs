@@ -13,7 +13,7 @@ namespace ADAMM {
         private String originalFilePath;
 
         public MeetDatabase(string dbFilePath) {
-            //File.Copy(dbFilePath, "db.mdb", true);
+            //pX47P(sA_dfQ-r)-651V
             ZipFile.ExtractToDirectory(dbFilePath, "db");
             originalFilePath = dbFilePath;
             DB = new OdbcConnection();
@@ -46,7 +46,7 @@ namespace ADAMM {
         }
         public List<Event> createEvents(List<Division> divisions) {
             List<Event> events = new List<Event>();
-            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes, Div_no, Event_stat FROM Event ORDER BY Event_no ASC");
+            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes, Div_no, Event_stat, Event_stroke, Event_dist, Res_meas FROM Event ORDER BY Event_no ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
@@ -54,7 +54,7 @@ namespace ADAMM {
                 foreach (Division d in divisions)
                     if (d.DivisionNumber == r.GetInt32(5))
                         eventDivision = d;
-                events.Add(new Event(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetString(3)[0], r.GetInt16(4), eventDivision, r.GetString(6)[0]));
+                events.Add(new Event(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetString(3)[0], r.GetInt16(4), eventDivision, r.GetString(6)[0], r.GetString(7)[0], r.GetInt32(8), r.GetString(9)[0]));
             }
             return events;
         }

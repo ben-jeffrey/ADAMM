@@ -99,7 +99,7 @@ namespace ADAMM
         }
 
         public void addAthleteToEvent(Athlete a, Event e) {
-            if (e.EventStatus != 'U')
+            if (e.EventStatus != "Unseeded")
                 foreach (Heat h in e.EventHeats)
                     if (!h.full()) {
                         for (int l = 1; l <= h.HeatEvent.EventPositionCount; l++)
@@ -113,7 +113,7 @@ namespace ADAMM
         }
 
         public void removeAthleteFromEvent(Athlete a, Event e) {
-            if (e.EventStatus != 'U') {
+            if (e.EventStatus != "Unseeded") {
                 foreach (Heat h in e.EventHeats)
                     if (h.containsAthlete(a)) {
                         foreach (KeyValuePair<int, int> l in h.LaneAthletes)
