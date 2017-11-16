@@ -51,6 +51,7 @@ namespace ADAMM
                 heat.Width = double.NaN;
                 heat.Header = 1;
                 heat.Content = entryList;
+                entryList.AlternationCount = 2;
                 heatTabs.Items.Add(heat);
                 heatTabs.SelectedIndex = 0;
                 
@@ -129,6 +130,13 @@ namespace ADAMM
 
             athleteTeam.ItemsSource = m.MeetTeams;
             athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
+
+            athleteEnteredEvents.Items.Clear();
+            athleteEligibleEvents.Items.Clear();
+            foreach (Event ev in m.getEntriesForAthlete(currentAthlete))
+                athleteEnteredEvents.Items.Add(ev);
+            foreach (Event ev in m.getEligibleEventsForAthlete(currentAthlete))
+                athleteEligibleEvents.Items.Add(ev);
         }
 
         private void eventSearch_TextChanged(object sender, TextChangedEventArgs e) {
@@ -153,8 +161,9 @@ namespace ADAMM
             athleteList.ScrollIntoView(newAthlete);
         }
 
-        private void addEntry_Click(object sender, RoutedEventArgs e) {
-            Event currentEvent = (Event)athleteEligibleEvents.SelectedItem;
+        private void athleteEnteredEvents_Drop(object sender, DragEventArgs e) {
+            Event currentEvent = e.Data.GetData(typeof(Event)) as Event;
+            if (athleteEnteredEvents.Items.Contains(currentEvent)) return;
             athleteEligibleEvents.Items.Remove(currentEvent);
             athleteEnteredEvents.Items.Add(currentEvent);
             athleteEnteredEvents.Items.SortDescriptions.Clear();
@@ -162,13 +171,40 @@ namespace ADAMM
                 new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
         }
 
-        private void removeEntry_Click(object sender, RoutedEventArgs e) {
-            Event currentEvent = (Event)athleteEnteredEvents.SelectedItem;
+        private void athleteEligibleEvents_Drop(object sender, DragEventArgs e) {
+            Event currentEvent = e.Data.GetData(typeof(Event)) as Event;
+            if (athleteEligibleEvents.Items.Contains(currentEvent)) return;
             athleteEnteredEvents.Items.Remove(currentEvent);
             athleteEligibleEvents.Items.Add(currentEvent);
             athleteEligibleEvents.Items.SortDescriptions.Clear();
             athleteEligibleEvents.Items.SortDescriptions.Add(
                 new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+        }
+
+        private void athleteEvents_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            ListBox parent = (ListBox)sender;
+            object data = GetDataFromListBox(parent, e.GetPosition(parent));
+            if (data != null) {
+                parent.SelectedItem = data;
+                DragDrop.DoDragDrop(parent, data, DragDropEffects.Move);
+            }
+        }
+
+        private object GetDataFromListBox(ListBox src, Point pt) {
+            UIElement element = src.InputHitTest(pt) as UIElement;
+            if (element != null) {
+                object data = DependencyProperty.UnsetValue;
+                while(data == DependencyProperty.UnsetValue) {
+                    data = src.ItemContainerGenerator.ItemFromContainer(element);
+                    if (data == DependencyProperty.UnsetValue)
+                        element = VisualTreeHelper.GetParent(element) as UIElement;
+                    if (element == src)
+                        return null;
+                }
+                if (data != DependencyProperty.UnsetValue)
+                    return data;
+            }
+            return null;
         }
     }
 }
