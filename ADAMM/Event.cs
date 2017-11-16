@@ -16,6 +16,7 @@ namespace ADAMM
         public Division EventDivision { get; set; }
         public string EventStatus { get { return StatusString(); } set { status = value[0]; } }
         private char status;
+        public string EventStatusColor { get { return StatusColor(); } }
         public string EventCategory { get { return CategoryString(); } set { category = value[0]; } }
         private char category;
         public int EventDistance {get; set;}
@@ -79,6 +80,15 @@ namespace ADAMM
                 case 'U': return "Unseeded";
                 case 'A': return "Done";
                 default: return "Unknown";
+            }
+        }
+
+        public string StatusColor() {
+            switch (status) {
+                case 'S': return "Green";
+                case 'U': return "White";
+                case 'A': return "Gray";
+                default: return "Red";
             }
         }
 

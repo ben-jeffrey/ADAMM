@@ -43,11 +43,25 @@
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="eventSearch" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Margin="5,5,5,0" TextChanged="eventSearch_TextChanged" />
                     <ListView x:Name="eventList" AlternationCount="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="eventList_SelectionChanged" Height="Auto" Width="Auto" Margin="0,32,0,0">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Margin" Value="-6, -2, -6, -2" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Event #" DisplayMemberBinding="{Binding Path=EventNumber}" />
                                 <GridViewColumn Header="Event Name" Width="300" />
-                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=EventStatus}" Width="100"/>
+                                <GridViewColumn Header="Status" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="{Binding Path=EventStatusColor}">
+                                                <TextBlock Text="{Binding Path=EventStatus}" Margin="5, 0, 0, 0" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="Heats" DisplayMemberBinding="{Binding Path=EventHeats.Count}" />
                             </GridView>
                         </ListView.View>
