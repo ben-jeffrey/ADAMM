@@ -1,0 +1,113 @@
+﻿<Page x:Class="ADAMM.AthleteTab"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADAMM"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="AthleteTab">
+
+    <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="LightGray" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="ListBoxItem">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="LightGray" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <Grid Background="#FFE5E5E5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="athleteSearch" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Margin="5,5,32,0" TextChanged="athleteSearch_TextChanged" />
+            <Button x:Name="athleteAdd" HorizontalAlignment="Right" VerticalAlignment="Top" Width="22" Height="22" Margin="5,5,5,5" Content="+" Click="athleteAdd_Click" />
+
+            <ListView x:Name="athleteList" AlternationCount="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="athleteList_SelectionChanged" Margin="0,32,0,0">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=AthleteNumber}"/>
+                        <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=AthleteFirstName}"/>
+                        <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=AthleteLastName}"/>
+                        <GridViewColumn Header="Sex" DisplayMemberBinding="{Binding Path=AthleteGender}"/>
+                        <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=AthleteTeam.longName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+            <Grid Grid.Column="2">
+                <TextBox x:Name="athleteFName" HorizontalAlignment="Left" Height="23" Margin="50,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                <Label Content="First:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="athleteLName" HorizontalAlignment="Left" Height="23" Margin="50,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                <Label Content="Last:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+                <RadioButton x:Name="athleteMale" GroupName="athleteGender" Content="Male" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+                <RadioButton x:Name="athleteFemale" GroupName="athleteGender" Content="Female" HorizontalAlignment="Left" Margin="60,90,0,0" VerticalAlignment="Top"/>
+                <ComboBox x:Name="athleteTeam" HorizontalAlignment="Left" Margin="50,110,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="longName"/>
+                <Label Content="Team:" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" />
+
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Height="auto" Margin="0,150,0,90">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox x:Name="athleteEligibleEvents" Grid.Column="0" Drop="athleteEligibleEvents_Drop" AllowDrop="True" PreviewMouseLeftButtonDown="athleteEvents_PreviewMouseLeftButtonDown"
+                                     HorizontalAlignment="Stretch" Height="auto" Margin="10,0,5,0" VerticalAlignment="Stretch" Width="auto" AlternationCount="2">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch" Width="Auto">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Path=EventNumber}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding}" HorizontalAlignment="Stretch" Width="Auto" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <ListBox x:Name="athleteEnteredEvents" Grid.Column="1" Drop="athleteEnteredEvents_Drop" AllowDrop="True" PreviewMouseLeftButtonDown="athleteEvents_PreviewMouseLeftButtonDown"
+                                     HorizontalAlignment="Stretch" Height="auto" Margin="5,0,10,0" VerticalAlignment="Stretch" Width="auto" AlternationCount="2">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Path=EventNumber}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding}" HorizontalAlignment="Stretch" Width="Auto" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <Button Content="Update" HorizontalAlignment="Left" Height="25" Margin="10,0,0,50" VerticalAlignment="Bottom" Width="50" Click="athleteUpdate_Click"/>
+                <Button Content="Revert" HorizontalAlignment="Left" Height="25" Margin="70,0,0,50" VerticalAlignment="Bottom" Width="50" Click="athleteRevert_Click"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

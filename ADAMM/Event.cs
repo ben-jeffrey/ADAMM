@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ADAMM
 {
-    class Event : IComparable {
+    public class Event : IComparable {
         public static MeetDatabase MeetDB;
         public int EventNumber { get; }
         public int EventPointer { get; }

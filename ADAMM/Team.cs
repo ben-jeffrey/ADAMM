@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ADAMM
 {
-    class Team {
+    public class Team {
         public static MeetDatabase MeetDB;
         public List<Athlete> TeamRoster { get; }
         public int TeamNumber { get; }

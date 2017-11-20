@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace ADAMM
 {
-    class Athlete : INotifyPropertyChanged {
+    public class Athlete : INotifyPropertyChanged {
         public static MeetDatabase MeetDB;
         public event PropertyChangedEventHandler PropertyChanged;
 

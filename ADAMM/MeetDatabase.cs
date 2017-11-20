@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Compression;
 
 namespace ADAMM {
-    class MeetDatabase {
+    public class MeetDatabase {
         private static OdbcConnection DB;
         private String originalFilePath;
 
@@ -77,7 +77,6 @@ namespace ADAMM {
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
                 Division athleteDivision = null;
-                Console.WriteLine(r.GetValue(5).GetType());
                 foreach (Division d in divisions)
                     if (d.DivisionAgeLow <= r.GetInt16(5) && r.GetInt16(5) <= d.DivisionAgeHigh)
                         athleteDivision = d;

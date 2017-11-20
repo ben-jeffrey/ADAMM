@@ -7,7 +7,7 @@ using System.Data.Odbc;
 
 namespace ADAMM
 {
-    class Meet {
+    public class Meet {
         public MeetDatabase MeetDB { get; }
         private String MeetName;
         private String MeetDate;

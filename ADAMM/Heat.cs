@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ADAMM {
-    class Heat {
+    public class Heat {
         public Event HeatEvent { get; set; }
         public int HeatNumber { get; set; }
         public static MeetDatabase MeetDB;

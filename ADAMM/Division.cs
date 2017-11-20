@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ADAMM {
-    class Division {
+    public class Division {
         public int DivisionNumber {get; set;}
         public String DivisionName { get; set; }
         public int DivisionAgeLow { get; set; }
