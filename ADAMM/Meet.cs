@@ -15,6 +15,9 @@ namespace ADAMM
         public List<Team> MeetTeams { get; set; }
         public List<Division> MeetDivisions { get; set; }
 
+        public static Athlete EmptyAthlete = new Athlete(-1, -1, "", "", ' ', null);
+        public static Event EmtpyEvent = new Event(-1, -1, ' ', ' ', 0, null, ' ', ' ', 0, ' ');
+
         public Meet(string dbFilePath) {
             MeetDB = new MeetDatabase(dbFilePath);
             String[] meetInfo = MeetDB.getMeetInfo();
@@ -31,22 +34,24 @@ namespace ADAMM
             MeetTeams = MeetDB.createTeams(MeetDivisions);
         }
 
-        public List<String> getEntriesForEvent(Event currentEvent) {
-            List<String> eventEntries = new List<string>();
+        public List<List<Entry>> getEntriesForEvent(Event currentEvent) {
+            List<List<Entry>> eventEntries = new List<List<Entry>>();
             List<Dictionary<int, int>> heatEntries = currentEvent.getHeatEntries();
+
             foreach (Dictionary<int, int> h in heatEntries) {
+                List<Entry> currentHeat = new List<Entry>();
+
                 for (int i = 1; i <= currentEvent.EventPositionCount; i++) {
                     if (h.ContainsKey(i)) {
                         Athlete a = findAthlete(h[i]);
-                        eventEntries.Add(i + " " + a.AthleteFirstName + " " + a.AthleteLastName);
+                        currentHeat.Add(new Entry(i, a, currentEvent));
                     } else {
-                        eventEntries.Add(i.ToString());
+                        currentHeat.Add(new Entry(i, EmptyAthlete, currentEvent));
                     }
                 }
-                eventEntries.Add("");
+
+                eventEntries.Add(currentHeat);
             }
-            if (eventEntries.Count > 0)
-                eventEntries.RemoveAt(eventEntries.Count - 1);
 
             return eventEntries;
         }

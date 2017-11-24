@@ -34,37 +34,25 @@ namespace ADAMM {
         private void eventList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (e.AddedItems.Count - e.RemovedItems.Count <= 1) {
                 Event selectedEvent = (Event)e.AddedItems[0];
-                List<String> selectedEntries = m.getEntriesForEvent(selectedEvent);
+                List<List<Entry>> selectedEntries = m.getEntriesForEvent(selectedEvent);
 
                 heatTabs.Items.Clear();
-                TabItem heat = new TabItem();
-                ListView entryList = new ListView();
-                heat.HorizontalAlignment = HorizontalAlignment.Stretch;
-                heat.VerticalAlignment = VerticalAlignment.Stretch;
-                heat.Height = double.NaN;
-                heat.Width = double.NaN;
-                heat.Header = 1;
-                heat.Content = entryList;
-                entryList.AlternationCount = 2;
-                heatTabs.Items.Add(heat);
-                heatTabs.SelectedIndex = 0;
 
-                foreach (String entry in selectedEntries) {
-                    if (entry == "") {
-                        heat = new TabItem();
-                        entryList = new ListView();
-                        heat.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        heat.VerticalAlignment = VerticalAlignment.Stretch;
-                        heat.Height = double.NaN;
-                        heat.Width = double.NaN;
-                        heat.Header = heatTabs.Items.Count + 1;
-                        heat.Content = entryList;
-                        heatTabs.Items.Add(heat);
-                    }
-                    else {
-                        entryList.Items.Add(entry);
-                    }
+                foreach (List<Entry> h in selectedEntries) {
+                    TabItem heat = new TabItem();
+                    Frame EntryFrame = new Frame();
+                    EntryFrame.LoadCompleted += HeatTab_LoadCompleted;
+                    EntryFrame.Navigate(new HeatTab(), h);
+                    heat.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    heat.VerticalAlignment = VerticalAlignment.Stretch;
+                    heat.Height = double.NaN;
+                    heat.Width = double.NaN;
+                    heat.Header = heatTabs.Items.Count + 1; ;
+                    heat.Content = EntryFrame;
+                    heatTabs.Items.Add(heat);
                 }
+
+                heatTabs.SelectedIndex = 0;
             }
         }
 
@@ -75,5 +63,9 @@ namespace ADAMM {
                     eventList.Items.Add(ev);
         }
 
+        void HeatTab_LoadCompleted(object sender, NavigationEventArgs e) {
+            List<Entry> h = (List<Entry>)e.ExtraData;
+            ((HeatTab)e.Content).SetUpEntries(h);
+        }
     }
 }

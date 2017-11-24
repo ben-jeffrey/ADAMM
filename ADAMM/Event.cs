@@ -36,7 +36,7 @@ namespace ADAMM
             EventDistance = dist;
             EventMeasure = measure;
             EventHeats = new List<Heat>();
-            createHeats();
+            if (ptr >= 0) createHeats();
         }
 
         private void createHeats() {

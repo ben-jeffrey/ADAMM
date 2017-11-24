@@ -37,7 +37,6 @@ namespace ADAMM
         
 
         void EventTab_LoadCompleted(object sender, NavigationEventArgs e) {
-            
             m = (Meet)e.ExtraData;
             ((EventTab)e.Content).SetUpMeet(m);
         }

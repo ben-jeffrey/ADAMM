@@ -61,10 +61,14 @@
       <DependentUpon>AthleteTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Division.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="EventTab.xaml.cs">
       <DependentUpon>EventTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Heat.cs" />
+    <Compile Include="HeatTab.xaml.cs">
+      <DependentUpon>HeatTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MeetDatabase.cs" />
     <Compile Include="Team.cs" />
     <Page Include="AthleteTab.xaml">
@@ -72,6 +76,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EventTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HeatTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

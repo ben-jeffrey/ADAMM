@@ -23,18 +23,6 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style TargetType="ListBoxItem">
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
-                        <Setter Property="Background" Value="White" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="LightGray" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
