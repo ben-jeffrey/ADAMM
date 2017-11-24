@@ -11,7 +11,7 @@ namespace ADAMM
         public List<Athlete> TeamRoster { get; }
         public int TeamNumber { get; }
         public string longName { get; }
-        private string shortName { get; set; }
+        public string shortName { get; set; }
         private string abbreviation { get; set; }
 
         public Team(int num, String lName, String sName, String abbr, List<Division> divisions) {

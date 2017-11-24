@@ -14,13 +14,15 @@
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
                         <Setter Property="Background" Value="White" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Trigger>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                         <Setter Property="Background" Value="LightGray" />
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Trigger>
                 </Style.Triggers>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="AllowDrop" Value="True" />
+                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="entryList_PreviewMouseLeftButtonDown" />
+                <EventSetter Event="Drop" Handler="entryList_Drop" />
             </Style>
         </Grid.Resources>
         <ListBox x:Name="entryList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" AlternationCount="2">

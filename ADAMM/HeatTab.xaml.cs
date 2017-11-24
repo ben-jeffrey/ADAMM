@@ -26,5 +26,27 @@ namespace ADAMM {
             foreach (Entry e in entries)
                 entryList.Items.Add(e);
         }
+
+        private void entryList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            if (sender is ListBoxItem) {
+                ListBoxItem data = sender as ListBoxItem;
+                DragDrop.DoDragDrop(data, data.DataContext, DragDropEffects.Move);
+                data.IsSelected = true;
+            }
+        }
+
+        private void entryList_Drop(object sender, DragEventArgs e) {
+            Entry draggedEntry = e.Data.GetData(typeof(Entry)) as Entry;
+            Entry swapEntry = ((ListBoxItem)sender).DataContext as Entry;
+            
+            int draggedIndex = draggedEntry.EntryPosition - 1;
+            int swapIndex = swapEntry.EntryPosition - 1;
+
+            draggedEntry.EntryPosition = swapIndex + 1;
+            swapEntry.EntryPosition = draggedIndex + 1;
+
+            entryList.Items[swapIndex] = draggedEntry;
+            entryList.Items[draggedIndex] = swapEntry;
+        }
     }
 }
