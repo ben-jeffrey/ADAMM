@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ADAMM"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
+      d:DesignHeight="700" d:DesignWidth="700"
       Title="EventTab">
 
     <Grid x:Name="Events" Background="#FFE5E5E5">
@@ -26,7 +26,7 @@
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBox x:Name="eventSearch" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Margin="5,5,5,0" TextChanged="eventSearch_TextChanged" />
@@ -48,7 +48,12 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-        <TabControl x:Name="heatTabs" Grid.Column="2" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" />
+        <GridSplitter Grid.Column="1" Width="30" HorizontalAlignment="Stretch" />
+        <Button x:Name="addEvent" Grid.Column="1" VerticalAlignment="Top" Height="30" Margin="0, 90, 0, 0" Content="+" Click="addEvent_Click" />
+        <Frame x:Name="eventInteractionPane" Grid.Column="2" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" 
+               LoadCompleted="EventPane_LoadCompleted" >
+            
+        </Frame>
+        <!-- TabControl x:Name="heatTabs" Grid.Column="2" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" /-->
     </Grid>
 </Page>

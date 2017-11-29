@@ -10,7 +10,7 @@
     <Grid>
         <TabControl x:Name="tabControl" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto">
             <TabItem Header="Events">
-                <Frame x:Name="EventTabFrame" LoadCompleted="EventTab_LoadCompleted" />
+                <Frame x:Name="EventTabFrame" LoadCompleted="EventTab_LoadCompleted" NavigationUIVisibility="Hidden" />
             </TabItem>
             <TabItem Header="Athletes" Height="23" VerticalAlignment="Top">
                 <Frame x:Name="AthleteTabFrame" LoadCompleted="AthleteTabFrame_LoadCompleted" />

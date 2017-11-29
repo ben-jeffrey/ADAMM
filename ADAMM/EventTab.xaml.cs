@@ -29,30 +29,18 @@ namespace ADAMM {
             m = meet;
             foreach (Event ev in m.MeetEvents)
                 eventList.Items.Add(ev);
+
+            eventList.SelectedIndex = 0;
         }
 
         private void eventList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (e.AddedItems.Count - e.RemovedItems.Count <= 1) {
+            int difference = e.AddedItems.Count - e.RemovedItems.Count;
+            if (difference == 1 || difference == 0) {
                 Event selectedEvent = (Event)e.AddedItems[0];
                 List<List<Entry>> selectedEntries = m.getEntriesForEvent(selectedEvent);
 
-                heatTabs.Items.Clear();
-
-                foreach (List<Entry> h in selectedEntries) {
-                    TabItem heat = new TabItem();
-                    Frame EntryFrame = new Frame();
-                    EntryFrame.LoadCompleted += HeatTab_LoadCompleted;
-                    EntryFrame.Navigate(new HeatTab(), h);
-                    heat.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    heat.VerticalAlignment = VerticalAlignment.Stretch;
-                    heat.Height = double.NaN;
-                    heat.Width = double.NaN;
-                    heat.Header = heatTabs.Items.Count + 1; ;
-                    heat.Content = EntryFrame;
-                    heatTabs.Items.Add(heat);
-                }
-
-                heatTabs.SelectedIndex = 0;
+                eventInteractionPane.Navigate(new HeatTabsContainer(), selectedEntries);
+                
             }
         }
 
@@ -63,9 +51,13 @@ namespace ADAMM {
                     eventList.Items.Add(ev);
         }
 
-        void HeatTab_LoadCompleted(object sender, NavigationEventArgs e) {
-            List<Entry> h = (List<Entry>)e.ExtraData;
-            ((HeatTab)e.Content).SetUpEntries(h);
+        private void addEvent_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        void EventPane_LoadCompleted(object sender, NavigationEventArgs e) {
+            List<List<Entry>> h = (List<List<Entry>>)e.ExtraData;
+            ((HeatTabsContainer)e.Content).SetUpHeats(h);
         }
     }
 }
