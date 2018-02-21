@@ -46,15 +46,19 @@ namespace ADAMM {
         }
         public List<Event> createEvents(List<Division> divisions) {
             List<Event> events = new List<Event>();
-            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Trk_Field, Num_prelanes, Div_no, Event_stat, Event_stroke, Event_dist, Res_meas FROM Event ORDER BY Event_no ASC");
+            OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Num_prelanes, Div_no, Event_stat, Event_stroke, Event_dist, Res_meas, Trk_Field FROM Event ORDER BY Event_no ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
                 Division eventDivision = null;
                 foreach (Division d in divisions)
-                    if (d.DivisionNumber == r.GetInt32(5))
+                    if (d.DivisionNumber == r.GetInt32(4))
                         eventDivision = d;
-                events.Add(new Event(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetString(3)[0], r.GetInt16(4), eventDivision, r.GetString(6)[0], r.GetString(7)[0], r.GetInt32(8), r.GetString(9)[0]));
+                if (r.GetChar(9) == 'T') {
+                    //Console.WriteLine(r.GetInt16(3));
+                    events.Add(new RunningEvent(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetInt16(3), eventDivision, r.GetString(5)[0], r.GetString(6)[0], (int)r.GetFloat(7), r.GetString(8)[0]));
+                } else
+                    events.Add(new FieldEvent(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], eventDivision, r.GetString(5)[0], r.GetString(6)[0], r.GetString(8)[0]));
             }
             return events;
         }
@@ -97,13 +101,13 @@ namespace ADAMM {
             return divisions;
         }
 
-        public List<int[]> getEntries(int eventPtr) {
-            OdbcCommand com = new OdbcCommand("SELECT Ath_no, Fin_heat, Fin_lane FROM Entry WHERE Event_ptr = " + eventPtr + " ORDER BY Fin_heat ASC, Fin_lane ASC;");
+        public List<Entry> getEntries(Event e) {
+            OdbcCommand com = new OdbcCommand("SELECT Fin_lane, Fin_heat, Ath_no FROM Entry WHERE Event_ptr = " + e.EventPointer + " ORDER BY Fin_heat ASC, Fin_lane ASC;");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
-            List<int[]> entries = new List<int[]>();
+            List<Entry> entries = new List<Entry>();
             while (r.Read()) {
-                entries.Add(new int[] { r.GetInt32(0), r.GetInt32(1), r.GetInt32(2) });
+                entries.Add(new Entry(r.GetInt32(0), r.GetInt32(1), r.GetInt32(2), e));
             }
             return entries;
         }
@@ -144,12 +148,27 @@ namespace ADAMM {
         }
 
         public void insertNewEntry(Athlete ath, Event ev, Heat he, int lane) {
-            char metric = ev.EventType == 'T' ? 'M' : 'E';
             OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Entry (Event_ptr, Ath_no, ActSeed_course, ConvSeed_course, Hand_time, Fin_heat, Fin_lane)" +
                 "VALUES ({0}, {1}, '{2}', '{2}', FALSE, {3}, {4})",
-                ev.EventPointer, ath.AthletePointer, metric, he.HeatNumber, lane));
+                ev.EventPointer, ath.AthletePointer, ev.EventUnit, he.HeatNumber, lane));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            finishUpdate();
+        }
+
+        public void insertNewEvent(Event e) {
+            char Trk_Field = e.GetType() == typeof(FieldEvent) ? 'F' : 'T';
+            OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Event (Event_no, Event_gender, Event_dist, Event_stroke, Event_stat, Trk_Field, Res_Meas, Num_prelanes, Div_no)" +
+                "VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', '{6}', {7}, {8});",
+                e.EventNumber, e.EventGender, e.EventDistance, Event.CategoryChars[e.EventCategory], e.EventStatus, Trk_Field, e.EventUnit, e.EventPositionCount, e.EventDivision.DivisionNumber));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+
+            com = new OdbcCommand("SELECT Event_ptr FROM Event WHERE Event_no = " + e.EventNumber + ";");
+            com.Connection = DB;
+            OdbcDataReader r = com.ExecuteReader();
+            r.Read();
+            e.EventPointer = r.GetInt32(0);
             finishUpdate();
         }
 

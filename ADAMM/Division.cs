@@ -18,5 +18,9 @@ namespace ADAMM {
             DivisionAgeHigh = h;
         }
 
+        public override string ToString() {
+            return DivisionName;
+        }
+
     }
 }

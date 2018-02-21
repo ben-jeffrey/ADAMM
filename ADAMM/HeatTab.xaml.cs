@@ -22,9 +22,8 @@ namespace ADAMM {
             InitializeComponent();
         }
 
-        public void SetUpEntries(List<Entry> entries) {
-            foreach (Entry e in entries)
-                entryList.Items.Add(e);
+        public void SetUpEntries(Heat h) {
+            entryList.ItemsSource = h.HeatEntries;
         }
 
         private void entryList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {

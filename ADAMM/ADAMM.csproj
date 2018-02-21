@@ -60,11 +60,18 @@
     <Compile Include="AthleteTab.xaml.cs">
       <DependentUpon>AthleteTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CreateEventMenu.xaml.cs">
+      <DependentUpon>CreateEventMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Division.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="EventAdjustMenu.xaml.cs">
+      <DependentUpon>EventAdjustMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EventTab.xaml.cs">
       <DependentUpon>EventTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FieldEvent.cs" />
     <Compile Include="Heat.cs" />
     <Compile Include="HeatTab.xaml.cs">
       <DependentUpon>HeatTab.xaml</DependentUpon>
@@ -73,8 +80,19 @@
       <DependentUpon>HeatTabsContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="MeetDatabase.cs" />
+    <Compile Include="MultiEvent.cs" />
+    <Compile Include="RelayEvent.cs" />
+    <Compile Include="RunningEvent.cs" />
     <Compile Include="Team.cs" />
     <Page Include="AthleteTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateEventMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EventAdjustMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -9,9 +9,8 @@ namespace ADAMM
     public class Event : IComparable {
         public static MeetDatabase MeetDB;
         public int EventNumber { get; }
-        public int EventPointer { get; }
-        private char EventGender { get; set; }
-        public char EventType { get; set; }
+        public int EventPointer { get; set; }
+        public char EventGender { get; set; }
         public int EventPositionCount { get; }
         public Division EventDivision { get; set; }
         public string EventStatus { get { return StatusString(); } set { status = value[0]; } }
@@ -20,41 +19,62 @@ namespace ADAMM
         public string EventCategory { get { return CategoryString(); } set { category = value[0]; } }
         private char category;
         public int EventDistance {get; set;}
-        public char EventMeasure { get; set; }
+        public char EventUnit { get; set; }
         public List<Heat> EventHeats { get; set; }
         private int level { get; set; }
 
-        public Event(int number, int ptr, char gender, char trkfld, int posCount, Division div, char stat, char cat, int dist, char measure) {
+        public Event(int number, int ptr, char gender, int posCount, Division div, char stat, char cat, int dist, char unit) {
             EventNumber = number;
             EventPointer = ptr;
             EventGender = gender;
-            EventType = trkfld;
             EventPositionCount = posCount;
             EventDivision = div;
             status = stat;
             category = cat;
             EventDistance = dist;
-            EventMeasure = measure;
+            EventUnit = unit;
             EventHeats = new List<Heat>();
             if (ptr >= 0) createHeats();
         }
 
         private void createHeats() {
-            List<int[]> entries = MeetDB.getEntries(EventPointer);
-            int currentHeat = 0;
-            foreach (int[] entry in entries) {
-                if (entry[1] != currentHeat) {
-                    currentHeat = entry[1];
-                    EventHeats.Add(new Heat(this, currentHeat));
+            List<Entry> entries = MeetDB.getEntries(this);
+            int totalHeats = 0;
+            foreach (Entry e in entries)
+                if (e.EntryHeat > totalHeats)
+                    totalHeats = e.EntryHeat;
+
+            for (int i = 0; i < totalHeats; i++)
+                EventHeats.Add(new Heat(this, i));
+            
+            foreach (Entry e in entries)
+                EventHeats[e.EntryHeat-1].HeatEntries.Add(e);
+        }
+
+        public void addAthlete(Athlete a) {
+            Boolean added = false;
+            foreach (Heat h in EventHeats)
+                if (!h.full()) {
+                    h.addAthlete(a);
+                    added = true;
+                    break;
                 }
-                EventHeats.Last().addCompetitor(entry[0], entry[2]);
+            if (!added) {
+                Heat h = new Heat(this, EventHeats.Count);
+                h.addAthlete(a);
+                EventHeats.Add(h);
             }
         }
 
-        public List<Dictionary<int, int>> getHeatEntries() {
-            List<Dictionary<int, int>> entries = new List<Dictionary<int, int>>();
+        public void removeAthlete(Athlete a) {
+            foreach (Heat h in EventHeats)
+                h.removeAthlete(a);
+        }
+
+        public List<List<Entry>> getHeatEntries() {
+            List<List<Entry>> entries = new List<List<Entry>>();
             foreach (Heat h in EventHeats) {
-                entries.Add(h.LaneAthletes);
+                entries.Add(h.HeatEntries);
             }
             return entries;
         }
@@ -92,6 +112,11 @@ namespace ADAMM
             }
         }
 
+        public static Dictionary<string, char> CategoryChars = new Dictionary<string, char>
+        {{"Dash", 'A'}, {"Run", 'B'}, {"Race Walk", 'D'}, {"Hurdles", 'E'}, {"High Jump", 'K'},
+        { "Pole Vault", 'L'}, {"Long Jump", 'M'}, {"Triple Jump", 'N'}, {"Discus", 'O'},
+        { "Javelin", 'Q'}, { "Shot Put", 'R'}, {"Relay", 'W'}};
+
         public string CategoryString() {
             switch(category) {
                 case 'A': return "Dash";
@@ -111,13 +136,11 @@ namespace ADAMM
         }
 
         public override string ToString() {
-            string gender = EventGender == 'M' ? "Mens " : "Womens ";
-            string distance = "";
-            if (EventType == 'T')
-                distance = EventDistance.ToString() + " " + (EventMeasure == 'M' ? "Meter " : "Yard ");
+            string gender = EventGender == 'M' ? "Mens" : "Womens";
+            string distance = EventDistance.ToString() + " " + (EventUnit == 'M' ? "Meter" : "Yard");
             string type = CategoryString();
             string div = EventDivision.DivisionName;
-            return String.Format("{0}{1}{2} {3}", gender, distance, type, div);
+            return String.Format("{0} {1} {2} {3}", gender, distance, type, div);
         }
 
         public int CompareTo(object obj) {

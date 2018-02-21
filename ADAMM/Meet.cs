@@ -16,7 +16,9 @@ namespace ADAMM
         public List<Division> MeetDivisions { get; set; }
 
         public static Athlete EmptyAthlete = new Athlete(-1, -1, "", "", ' ', null);
-        public static Event EmtpyEvent = new Event(-1, -1, ' ', ' ', 0, null, ' ', ' ', 0, ' ');
+        public static Event EmtpyEvent = new Event(-1, -1, ' ', 0, null, ' ', ' ', 0, ' ');
+
+        #region Creation of Meet
 
         public Meet(string dbFilePath) {
             MeetDB = new MeetDatabase(dbFilePath);
@@ -30,31 +32,24 @@ namespace ADAMM
             Heat.MeetDB = MeetDB;
 
             MeetDivisions = MeetDB.createDivisions();
-            MeetEvents = MeetDB.createEvents(MeetDivisions);
             MeetTeams = MeetDB.createTeams(MeetDivisions);
+            MeetEvents = MeetDB.createEvents(MeetDivisions);
+            PropagateAthletes();
         }
 
-        public List<List<Entry>> getEntriesForEvent(Event currentEvent) {
-            List<List<Entry>> eventEntries = new List<List<Entry>>();
-            List<Dictionary<int, int>> heatEntries = currentEvent.getHeatEntries();
-
-            foreach (Dictionary<int, int> h in heatEntries) {
-                List<Entry> currentHeat = new List<Entry>();
-
-                for (int i = 1; i <= currentEvent.EventPositionCount; i++) {
-                    if (h.ContainsKey(i)) {
-                        Athlete a = findAthlete(h[i]);
-                        currentHeat.Add(new Entry(i, a, currentEvent));
-                    } else {
-                        currentHeat.Add(new Entry(i, EmptyAthlete, currentEvent));
-                    }
-                }
-
-                eventEntries.Add(currentHeat);
-            }
-
-            return eventEntries;
+        private void PropagateAthletes() {
+            foreach (Event e in MeetEvents)
+                foreach (Heat h in e.EventHeats)
+                    foreach (Entry ent in h.HeatEntries)
+                        foreach (Team t in MeetTeams) {
+                            Athlete found  = t.findAthlete(ent.EntryAthletePointer);
+                            if (found != null) ent.EntryAthlete = found;
+                        }
         }
+
+        #endregion
+        
+        #region Athletes and Entries
 
         public List<Event> getEntriesForAthlete(Athlete a) {
             List<Event> entries = new List<Event>();
@@ -104,34 +99,40 @@ namespace ADAMM
         }
 
         public void addAthleteToEvent(Athlete a, Event e) {
-            if (e.EventStatus != "Unseeded")
-                foreach (Heat h in e.EventHeats)
-                    if (!h.full()) {
-                        for (int l = 1; l <= h.HeatEvent.EventPositionCount; l++)
-                            if (!h.LaneAthletes.Keys.Contains(l)) {
-                                h.LaneAthletes.Add(l, a.AthletePointer);
-                                MeetDB.insertNewEntry(a, e, h, l);
-                                break;
-                            }
-                        break;
-                    }
+            e.addAthlete(a);
         }
 
         public void removeAthleteFromEvent(Athlete a, Event e) {
-            if (e.EventStatus != "Unseeded") {
-                foreach (Heat h in e.EventHeats)
-                    if (h.containsAthlete(a)) {
-                        foreach (KeyValuePair<int, int> l in h.LaneAthletes)
-                            if (l.Value == a.AthletePointer) {
-                                h.LaneAthletes.Remove(l.Key);
-                                MeetDB.removeEntry(a, e);
-                                break;
-                            }
-                        break;
-                    }
-            }
-
+            e.removeAthlete(a);
         }
+
+        #endregion
+
+        #region Events
+
+        public void addNewEvent(Event e) {
+            MeetEvents.Add(e);
+            MeetDB.insertNewEvent(e);
+        }
+
+        public List<Athlete> getEligibleAthletesForEvent(Event e) {
+            List<Athlete> eligible = new List<Athlete>();
+            foreach (Team t in MeetTeams)
+                foreach (Athlete a in t.TeamRoster)
+                    if (e.isEligible(a))
+                        eligible.Add(a);
+            return eligible;
+        }
+
+        #endregion
+
+        #region Miscellanious
+
+        public int getNextEventNumber() {
+            return MeetEvents.Max(e => e.EventNumber) + 1;
+        }
+
+        #endregion
 
         public void close() {
             MeetDB.close();

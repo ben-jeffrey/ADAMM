@@ -9,35 +9,58 @@ namespace ADAMM {
         public Event HeatEvent { get; set; }
         public int HeatNumber { get; set; }
         public static MeetDatabase MeetDB;
-        public Dictionary<int, int> LaneAthletes { get; }
+        public List<Entry> HeatEntries { get; }
 
         public Heat(Event evt, int ht) {
             HeatEvent = evt;
             HeatNumber = ht;
-            LaneAthletes = new Dictionary<int, int>();
+            HeatEntries = new List<Entry>();
+        }
+
+        public void addAthlete(Athlete a) {
+            for (int l = 1; l <= HeatEvent.EventPositionCount; l++) {
+                Boolean empty = true;
+                foreach (Entry e in HeatEntries)
+                    if (l == e.EntryPosition) {
+                        empty = false;
+                        break;
+                    }
+                if (empty) {
+                    HeatEntries.Add(new Entry(l, HeatNumber, a.AthletePointer, HeatEvent));
+                    MeetDB.insertNewEntry(a, HeatEvent, this, l);
+                    break;
+                }
+            }
+        }
+
+        public void removeAthlete(Athlete a) {
+            HeatEntries.RemoveAll(e => e.EntryAthlete == a);
         }
 
         public List<int> getOrderedEntries() {
             List<int> athNums = new List<int>();
-            foreach (KeyValuePair<int, int> k in LaneAthletes) {
-                athNums.Insert(k.Key-1, k.Value);
+            foreach (Entry e in HeatEntries) {
+                athNums.Insert(e.EntryPosition, e.EntryAthletePointer);
             }
             return athNums;
         }
 
-        public void addCompetitor(int ath, int lane) {
-            LaneAthletes.Add(lane, ath);
+        public bool containsAthlete(Athlete a) {
+            foreach (Entry e in HeatEntries) 
+                if (e.EntryAthletePointer == a.AthletePointer)
+                    return true;
+            return false;
         }
 
-        public bool containsAthlete(Athlete a) {
-            foreach (KeyValuePair<int, int> l in LaneAthletes) 
-                if (l.Value == a.AthletePointer)
+        public Boolean positionFilled(int pos) {
+            foreach (Entry e in HeatEntries)
+                if (e.EntryPosition == pos)
                     return true;
             return false;
         }
 
         public bool full() {
-            return LaneAthletes.Keys.Max() >= HeatEvent.EventPositionCount;
+            return HeatEntries.Count >= HeatEvent.EventPositionCount;
         }
     }
 }

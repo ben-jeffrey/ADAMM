@@ -1,0 +1,52 @@
+﻿<Page x:Class="ADAMM.EventAdjustMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADAMM"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="EventAdjustMenu">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="EventEntriesList" Grid.Row="0" Height="auto">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="EntryList_PreviewMouseLeftButtonDown" />
+                    <Setter Property="AllowDrop" Value="True" />
+                    <EventSetter Event="Drop" Handler="EntryList_Drop" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EntryPosition}" />
+                    <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteFirstName}" />
+                    <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteLastName}" />
+                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteTeam.shortName}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBox x:Name="AthleteSearch" Grid.Row="0" MaxLines="1" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextChanged="AthleteSearch_TextChanged" />
+            <ListView x:Name="EligibleAthletesList" Grid.Row="1" VerticalAlignment="Stretch" Height="Auto">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=AthleteFirstName}" />
+                        <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=AthleteLastName}" />
+                        <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=AthleteTeam.shortName}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        
+    </Grid>
+</Page>

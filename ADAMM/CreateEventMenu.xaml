@@ -1,0 +1,132 @@
+﻿<Page x:Class="ADAMM.CreateEventMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADAMM"
+      d:DesignHeight="720" d:DesignWidth="1280"
+      mc:Ignorable="d" 
+      Title="CreateEventMenu">
+
+    <StackPanel VerticalAlignment="Top">
+        <TextBlock Text="Create Event" FontSize="16" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,10,0,0">
+            <Label Content="Event No. " />
+            <TextBox x:Name="newEventNumber" Width="40" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <RadioButton x:Name="newEventMale" GroupName="newEventGender" Content="Male" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+            <RadioButton x:Name="newEventFemale" GroupName="newEventGender" Content="Female" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+            <RadioButton x:Name="newEventMixed" GroupName="newEventGender" Content="Mixed" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+        </StackPanel>
+        <Separator Margin="5,5,5,5" Width="200" HorizontalAlignment="Left" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+            <Label Content="Division " />
+            <ComboBox x:Name="newEventDivision" DisplayMemberPath="{Binding Path=DivisionName}" Width="100" />
+        </StackPanel>
+        <Separator Margin="5,5,5,5" Width="200" HorizontalAlignment="Left" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+            <Label Content="Event Type " />
+            <ComboBox x:Name="newEventType" SelectionChanged="newEventType_SelectionChanged" Width="100">
+                <ComboBoxItem>Running Event</ComboBoxItem>
+                <ComboBoxItem>Field Event</ComboBoxItem>
+                <ComboBoxItem>Relay Event</ComboBoxItem>
+                <ComboBoxItem>Multi Event</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+        <Border x:Name="settingsRunning" Margin="10,10,10,0" BorderThickness="1" BorderBrush="DimGray" HorizontalAlignment="Left">
+            <StackPanel Margin="5">
+                <TextBlock Text="Running Event"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Distance " />
+                    <TextBox x:Name="newEventDistance" Width="60" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Run Type " />
+                    <ComboBox x:Name="newRunningCategory" Width="100" HorizontalAlignment="Left" SelectedIndex="0">
+                        <ComboBoxItem>Dash</ComboBoxItem>
+                        <ComboBoxItem>Run</ComboBoxItem>
+                        <ComboBoxItem>Race Walk</ComboBoxItem>
+                        <ComboBoxItem>Hurdles</ComboBoxItem>
+                        <ComboBoxItem>Steeplechase</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="In Lanes " />
+                    <CheckBox x:Name="newEventInLanes" VerticalAlignment="Center" Click="newEventInLanes_Click" />
+                    <Label Content="   Number of Lanes " />
+                    <TextBox x:Name="newEventLaneCount" Width="20" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border  x:Name="settingsField" Margin="10,10,10,0" BorderThickness="1" BorderBrush="DimGray" HorizontalAlignment="Left">
+            <StackPanel Margin="5">
+                <TextBlock Text="Field Event"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Event Type " />
+                    <ComboBox x:Name="newFieldCategory" Width="100" HorizontalAlignment="Left" IsEditable="True"  SelectedIndex="0">
+                        <ComboBoxItem>High Jump</ComboBoxItem>
+                        <ComboBoxItem>Pole Vault</ComboBoxItem>
+                        <ComboBoxItem>Long Jump</ComboBoxItem>
+                        <ComboBoxItem>Triple Jump</ComboBoxItem>
+                        <ComboBoxItem>Discus Throw</ComboBoxItem>
+                        <ComboBoxItem>Hammer Throw</ComboBoxItem>
+                        <ComboBoxItem>Javelin Throw</ComboBoxItem>
+                        <ComboBoxItem>Shot Put</ComboBoxItem>
+                        <ComboBoxItem>Weight Throw</ComboBoxItem>
+                        <ComboBoxItem>Super Weight</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Multiple Flights " />
+                    <CheckBox x:Name="newEventInFlights" VerticalAlignment="Center" />
+                    <Label Content="   Flight Position Count " />
+                    <TextBox x:Name="newEventFlightCount" Width="30" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border x:Name="settingsRelay" Margin="10,10,10,0" BorderThickness="1" BorderBrush="DimGray" HorizontalAlignment="Left">
+            <StackPanel Margin="5">
+                <TextBlock Text="Relay Event"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Relay Type" />
+                    <ComboBox x:Name="newRelayCategory" Width="100" HorizontalAlignment="Left" SelectedIndex="0">
+                        <ComboBoxItem>Relay</ComboBoxItem>
+                        <ComboBoxItem>Sprint Medley</ComboBoxItem>
+                        <ComboBoxItem>Distance Medley</ComboBoxItem>
+                        <ComboBoxItem>Shuttle Hurdle</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Number of Legs" />
+                    <TextBox x:Name="newEventLegCount" Width="20" />
+                    <Label Content="  Leg Distance"/>
+                    <TextBox x:Name="newEventRelayDistance" Width="40" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border x:Name="settingsMulti" Margin="10,10,10,0" BorderThickness="1" BorderBrush="DimGray" HorizontalAlignment="Left">
+            <StackPanel Margin="5">
+                <TextBlock Text="Multi Event" />
+                <ComboBox x:Name="newMultiCategory" Width="100" HorizontalAlignment="Left" SelectedIndex="0">
+                    <ComboBoxItem>Biathlon</ComboBoxItem>
+                    <ComboBoxItem>Trialthon</ComboBoxItem>
+                    <ComboBoxItem>Tetrathlon</ComboBoxItem>
+                    <ComboBoxItem>Indoor Pentathlon</ComboBoxItem>
+                    <ComboBoxItem>Outdoor Pentathlon</ComboBoxItem>
+                    <ComboBoxItem>Weight Pentathlon</ComboBoxItem>
+                    <ComboBoxItem>Heptathlon</ComboBoxItem>
+                    <ComboBoxItem>Octathlon</ComboBoxItem>
+                    <ComboBoxItem>Decathlon</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+            <Button x:Name="newEventCreate" Content="Create" Width="50" HorizontalAlignment="Left" Click="newEventCreate_Click" />
+            <Button Content="Cancel" Width="50" HorizontalAlignment="Left" Margin="5,0,0,0" Click="newEventCancel_Click" />
+        </StackPanel>
+
+        </StackPanel>
+</Page>

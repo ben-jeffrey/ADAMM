@@ -22,10 +22,10 @@ namespace ADAMM {
             InitializeComponent();
         }
 
-        public void SetUpHeats(List<List<Entry>> entries) {
+        public void SetUpHeats(List<Heat> entries) {
             heatTabs.Items.Clear();
 
-            foreach (List<Entry> h in entries) {
+            foreach (Heat h in entries) {
                 TabItem heat = new TabItem();
                 Frame EntryFrame = new Frame();
                 EntryFrame.LoadCompleted += HeatTab_LoadCompleted;
@@ -43,9 +43,8 @@ namespace ADAMM {
         }
 
         void HeatTab_LoadCompleted(object sender, NavigationEventArgs e) {
-            List<Entry> h = (List<Entry>)e.ExtraData;
+            Heat h = (Heat)e.ExtraData;
             ((HeatTab)e.Content).SetUpEntries(h);
         }
-
     }
 }

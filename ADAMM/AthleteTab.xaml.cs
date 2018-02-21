@@ -34,24 +34,27 @@ namespace ADAMM {
         }
 
         private void athleteList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            Athlete currentAthlete = (Athlete)e.AddedItems[0];
-            athleteFName.Text = currentAthlete.AthleteFirstName;
-            athleteLName.Text = currentAthlete.AthleteLastName;
+            int difference = e.AddedItems.Count - e.RemovedItems.Count;
+            if (difference == 1 || difference == 0) {
+                Athlete currentAthlete = (Athlete)e.AddedItems[0];
+                athleteFName.Text = currentAthlete.AthleteFirstName;
+                athleteLName.Text = currentAthlete.AthleteLastName;
 
-            if (currentAthlete.AthleteGender == 'M')
-                athleteMale.IsChecked = true;
-            else
-                athleteFemale.IsChecked = true;
+                if (currentAthlete.AthleteGender == 'M')
+                    athleteMale.IsChecked = true;
+                else
+                    athleteFemale.IsChecked = true;
 
-            athleteTeam.ItemsSource = m.MeetTeams;
-            athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
+                athleteTeam.ItemsSource = m.MeetTeams;
+                athleteTeam.SelectedItem = currentAthlete.AthleteTeam;
 
-            athleteEnteredEvents.Items.Clear();
-            athleteEligibleEvents.Items.Clear();
-            foreach (Event ev in m.getEntriesForAthlete(currentAthlete))
-                athleteEnteredEvents.Items.Add(ev);
-            foreach (Event ev in m.getEligibleEventsForAthlete(currentAthlete))
-                athleteEligibleEvents.Items.Add(ev);
+                athleteEnteredEvents.Items.Clear();
+                athleteEligibleEvents.Items.Clear();
+                foreach (Event ev in m.getEntriesForAthlete(currentAthlete))
+                    athleteEnteredEvents.Items.Add(ev);
+                foreach (Event ev in m.getEligibleEventsForAthlete(currentAthlete))
+                    athleteEligibleEvents.Items.Add(ev);
+            }
 
         }
 
@@ -159,5 +162,6 @@ namespace ADAMM {
             }
             return null;
         }
+        
     }
 }
