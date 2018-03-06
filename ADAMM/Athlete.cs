@@ -42,7 +42,7 @@ namespace ADAMM
         }
 
         public bool filter(String filter) {
-            return firstName.Contains(filter) || lastName.Contains(filter);
+            return firstName.ToLower().Contains(filter.ToLower()) || lastName.ToLower().Contains(filter.ToLower());
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {

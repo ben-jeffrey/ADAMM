@@ -16,7 +16,7 @@ namespace ADAMM
         public List<Division> MeetDivisions { get; set; }
 
         public static Athlete EmptyAthlete = new Athlete(-1, -1, "", "", ' ', null);
-        public static Event EmtpyEvent = new Event(-1, -1, ' ', 0, null, ' ', ' ', 0, ' ');
+        //public static Event EmtpyEvent = new Event(-1, -1, ' ', 0, null, ' ', ' ', 0, ' ');
 
         #region Creation of Meet
 
@@ -38,13 +38,21 @@ namespace ADAMM
         }
 
         private void PropagateAthletes() {
-            foreach (Event e in MeetEvents)
-                foreach (Heat h in e.EventHeats)
-                    foreach (Entry ent in h.HeatEntries)
+            foreach (Event e in MeetEvents) {
+                if (e.isSeeded())
+                    foreach (Heat h in e.EventHeats)
+                        foreach (Entry ent in h.HeatEntries)
+                            foreach (Team t in MeetTeams) {
+                                Athlete found = t.findAthlete(ent.EntryAthletePointer);
+                                if (found != null) ent.EntryAthlete = found;
+                            }
+                else
+                    foreach (Entry ent in e.EventUnseededEntries)
                         foreach (Team t in MeetTeams) {
-                            Athlete found  = t.findAthlete(ent.EntryAthletePointer);
+                            Athlete found = t.findAthlete(ent.EntryAthletePointer);
                             if (found != null) ent.EntryAthlete = found;
                         }
+            }
         }
 
         #endregion
@@ -88,7 +96,7 @@ namespace ADAMM
             return newAthlete;
         }
 
-        public void updateEntries(Athlete a, List<Event> events) {
+        public void updateEntriesForAthlete(Athlete a, List<Event> events) {
             foreach (Event e in events)
                 if (!e.containsAthlete(a))
                     addAthleteToEvent(a, e);
@@ -119,9 +127,33 @@ namespace ADAMM
             List<Athlete> eligible = new List<Athlete>();
             foreach (Team t in MeetTeams)
                 foreach (Athlete a in t.TeamRoster)
-                    if (e.isEligible(a))
+                    if (e.isEligible(a) && !e.containsAthlete(a))
                         eligible.Add(a);
             return eligible;
+        }
+
+        public void removeEntries(List<Entry> toRemove) {
+
+        }
+
+        public void updateEntries(List<Entry> toUpdate) {
+
+        }
+
+        public void addEntries(List<Entry> toAdd) {
+
+        }
+
+        #endregion
+
+        #region Teams
+
+        public void addTeam(Team t) {
+
+        }
+
+        public void updateTeam(Team t) {
+            MeetDB.updateTeamRecord(t);
         }
 
         #endregion

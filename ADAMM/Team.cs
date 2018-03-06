@@ -10,15 +10,23 @@ namespace ADAMM
         public static MeetDatabase MeetDB;
         public List<Athlete> TeamRoster { get; }
         public int TeamNumber { get; }
-        public string longName { get; }
-        public string shortName { get; set; }
-        private string abbreviation { get; set; }
+        public string TeamLongName { get; set; }
+        public string TeamShortName { get; set; }
+        public string TeamAbbrev { get; set; }
+        public string TeamCity { get; set; }
+        public string TeamState { get; set; }
+        public string TeamZip { get; set; }
+        public string TeamCountry { get; set; }
 
-        public Team(int num, String lName, String sName, String abbr, List<Division> divisions) {
+        public Team(int num, String lName, String sName, String abbr, String city, String state, String zip, String country, List<Division> divisions) {
             TeamNumber = num;
-            longName = lName;
-            shortName = sName;
-            abbreviation = abbr;
+            TeamLongName = lName;
+            TeamShortName = sName;
+            TeamAbbrev = abbr;
+            TeamCity = city;
+            TeamState = state;
+            TeamZip = zip;
+            TeamCountry = country;
             TeamRoster = MeetDB.createTeamRoster(divisions, TeamNumber);
             foreach (Athlete a in TeamRoster)
                 a.AthleteTeam = this;

@@ -1,0 +1,33 @@
+﻿<Page x:Class="ADAMM.EventSeedMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADAMM"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="EventSeedMenu">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <ComboBox>
+                <ComboBoxItem Content="Snake" />
+                <ComboBoxItem Content="Standard" />
+            </ComboBox>
+            <Button Content="Seed" />
+        </StackPanel>
+        <ListView Grid.Row="1" x:Name="SeedEntryList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteFirstName}" />
+                    <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteLastName}" />
+                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteTeam.shortName}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>

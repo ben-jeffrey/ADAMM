@@ -22,6 +22,11 @@ namespace ADAMM {
 
         public EventTab ReturnTo;
         Meet meet;
+        Event evt;
+        bool seeded;
+        List<Entry> removedEntries = new List<Entry>();
+        List<Entry> updatedEntries = new List<Entry>();
+        List<Entry> addedEntries = new List<Entry>();
 
         public EventAdjustMenu() {
             InitializeComponent();
@@ -29,9 +34,18 @@ namespace ADAMM {
 
         public void Setup(Meet m, Event e) {
             meet = m;
+            evt = e;
+            seeded = e.isSeeded();
             List<Entry> flatEntries = new List<Entry>();
-            foreach (Heat h in e.EventHeats)
-                flatEntries.AddRange(h.HeatEntries);
+            if (seeded) {
+                foreach (Heat h in e.EventHeats)
+                    flatEntries.AddRange(h.EntriesWithEmpties());
+
+                CollectionViewSource.GetDefaultView(EventEntriesList.ItemsSource).SortDescriptions.Add(new SortDescription("EntryHeat", ListSortDirection.Ascending));
+                CollectionViewSource.GetDefaultView(EventEntriesList.ItemsSource).SortDescriptions.Add(new SortDescription("EntryPosition", ListSortDirection.Ascending));
+            } else
+                flatEntries = e.EventUnseededEntries;
+
             EventEntriesList.ItemsSource = flatEntries;
 
             /* Alternating Colors
@@ -48,14 +62,13 @@ namespace ADAMM {
 
         private void AthleteSearch_TextChanged(object sender, TextChangedEventArgs e) {
             List<Athlete> filteredAthletes = new List<Athlete>();
-            foreach (Team t in meet.MeetTeams)
-                foreach (Athlete a in t.TeamRoster)
-                    if (a.filter(AthleteSearch.Text))
-                        filteredAthletes.Add(a);
+            foreach (Athlete a in meet.getEligibleAthletesForEvent(evt))
+                if (a.filter(AthleteSearch.Text))
+                    filteredAthletes.Add(a);
             EligibleAthletesList.ItemsSource = filteredAthletes;
         }
 
-        private void EntryList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void DataList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (sender is ListViewItem) {
                 ListViewItem data = sender as ListViewItem;
                 data.IsSelected = true;
@@ -64,19 +77,56 @@ namespace ADAMM {
         }
 
         private void EntryList_Drop(object sender, DragEventArgs e) {
+            Athlete draggedAthlete = e.Data.GetData(typeof(Athlete)) as Athlete;
             Entry draggedEntry = e.Data.GetData(typeof(Entry)) as Entry;
             Entry swapEntry = ((ListViewItem)sender).DataContext as Entry;
 
-            int draggedIndex = draggedEntry.EntryPosition - 1;
-            int swapIndex = swapEntry.EntryPosition - 1;
+            if (draggedEntry != null) {
+                int draggedPos = draggedEntry.EntryPosition;
+                draggedEntry.EntryPosition = swapEntry.EntryPosition;
+                swapEntry.EntryPosition = draggedPos;
 
-            draggedEntry.EntryPosition = swapIndex + 1;
-            swapEntry.EntryPosition = draggedIndex + 1;
+                int draggedHeat = draggedEntry.EntryHeat;
+                draggedEntry.EntryHeat = swapEntry.EntryHeat;
+                swapEntry.EntryHeat = draggedHeat;
 
-            CollectionViewSource.GetDefaultView(EventEntriesList.ItemsSource).SortDescriptions.Add(new SortDescription("EntryPosition", ListSortDirection.Ascending));
+                updatedEntries.Add(draggedEntry);
+                updatedEntries.Add(swapEntry);
 
-            //EventEntriesList.ItemsSource. [swapIndex] = draggedEntry;
-            //EventEntriesList.ItemsSource[draggedIndex] = swapEntry;
+            } else if (draggedAthlete != null) {
+                Entry newEntry = new Entry(swapEntry.EntryPosition, swapEntry.EntryHeat, draggedAthlete.AthletePointer, swapEntry.EntryEvent);
+                List<Entry> newEntries = new List<Entry>();
+
+                newEntry.EntryAthlete = draggedAthlete;
+                newEntries.Add(newEntry);
+                addedEntries.Add(newEntry);
+                removedEntries.Add(swapEntry);
+
+                foreach (Entry ent in EventEntriesList.ItemsSource)
+                    if (ent != swapEntry)
+                        newEntries.Add(ent);
+
+                EventEntriesList.ItemsSource = newEntries;
+            }
+
+            if (seeded) {
+                CollectionViewSource.GetDefaultView(EventEntriesList.ItemsSource).SortDescriptions.Add(new SortDescription("EntryHeat", ListSortDirection.Ascending));
+                CollectionViewSource.GetDefaultView(EventEntriesList.ItemsSource).SortDescriptions.Add(new SortDescription("EntryPosition", ListSortDirection.Ascending));
+            }
+
+            
+            //EventEntriesList.Items[draggedIndex].IsSelected = false;
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e) {
+            meet.removeEntries(removedEntries);
+            meet.updateEntries(updatedEntries);
+            meet.addEntries(addedEntries);
+            ReturnTo.PageFinished();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e) {
+            ReturnTo.PageFinished();
         }
     }
 }

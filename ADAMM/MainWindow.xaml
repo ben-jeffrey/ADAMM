@@ -16,7 +16,7 @@
                 <Frame x:Name="AthleteTabFrame" LoadCompleted="AthleteTabFrame_LoadCompleted" />
             </TabItem>
             <TabItem Header="Teams">
-                <Grid Background="#FFE5E5E5"/>
+                <Frame x:Name="TeamTabFrame" LoadCompleted="TeamTabFrame_LoadCompleted" NavigationUIVisibility="Hidden" />
             </TabItem>
             <TabItem Header="Meet">
                 <Grid Background="#FFE5E5E5"/>

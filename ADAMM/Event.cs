@@ -21,6 +21,7 @@ namespace ADAMM
         public int EventDistance {get; set;}
         public char EventUnit { get; set; }
         public List<Heat> EventHeats { get; set; }
+        public List<Entry> EventUnseededEntries { get; set; }
         private int level { get; set; }
 
         public Event(int number, int ptr, char gender, int posCount, Division div, char stat, char cat, int dist, char unit) {
@@ -34,7 +35,9 @@ namespace ADAMM
             EventDistance = dist;
             EventUnit = unit;
             EventHeats = new List<Heat>();
-            if (ptr >= 0) createHeats();
+            EventUnseededEntries = new List<Entry>();
+            if (ptr >= 0 && isSeeded()) createHeats();
+            else EventUnseededEntries = MeetDB.getUnseededEntries(this);
         }
 
         private void createHeats() {
@@ -45,7 +48,7 @@ namespace ADAMM
                     totalHeats = e.EntryHeat;
 
             for (int i = 0; i < totalHeats; i++)
-                EventHeats.Add(new Heat(this, i));
+                EventHeats.Add(new Heat(this, i+1));
             
             foreach (Entry e in entries)
                 EventHeats[e.EntryHeat-1].HeatEntries.Add(e);
@@ -92,6 +95,10 @@ namespace ADAMM
                 if (h.containsAthlete(a))
                     return true;
             return false;
+        }
+
+        public bool isSeeded() {
+            return status != 'U';
         }
 
         public string StatusString() {

@@ -68,6 +68,9 @@
     <Compile Include="EventAdjustMenu.xaml.cs">
       <DependentUpon>EventAdjustMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EventSeedMenu.xaml.cs">
+      <DependentUpon>EventSeedMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EventTab.xaml.cs">
       <DependentUpon>EventTab.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,12 @@
     <Compile Include="RelayEvent.cs" />
     <Compile Include="RunningEvent.cs" />
     <Compile Include="Team.cs" />
+    <Compile Include="TeamEditMenu.xaml.cs">
+      <DependentUpon>TeamEditMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TeamTab.xaml.cs">
+      <DependentUpon>TeamTab.xaml</DependentUpon>
+    </Compile>
     <Page Include="AthleteTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -93,6 +102,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EventAdjustMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EventSeedMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -122,6 +135,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TeamEditMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TeamTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Meet.cs" />

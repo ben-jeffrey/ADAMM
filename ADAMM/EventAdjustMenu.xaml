@@ -10,13 +10,14 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="22" />
         </Grid.RowDefinitions>
         <ListView x:Name="EventEntriesList" Grid.Row="0" Height="auto">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="EntryList_PreviewMouseLeftButtonDown" />
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataList_PreviewMouseLeftButtonDown" />
                     <Setter Property="AllowDrop" Value="True" />
                     <EventSetter Event="Drop" Handler="EntryList_Drop" />
                 </Style>
@@ -38,6 +39,11 @@
             </Grid.RowDefinitions>
             <TextBox x:Name="AthleteSearch" Grid.Row="0" MaxLines="1" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextChanged="AthleteSearch_TextChanged" />
             <ListView x:Name="EligibleAthletesList" Grid.Row="1" VerticalAlignment="Stretch" Height="Auto">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataList_PreviewMouseLeftButtonDown" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=AthleteFirstName}" />
@@ -47,6 +53,9 @@
                 </ListView.View>
             </ListView>
         </Grid>
-        
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button Content="Save" Click="Save_Click" />
+            <Button Content="Cancel" Click="Cancel_Click" />
+        </StackPanel>
     </Grid>
 </Page>

@@ -14,10 +14,11 @@ namespace ADAMM {
 
         public MeetDatabase(string dbFilePath) {
             //pX47P(sA_dfQ-r)-651V
+            File.Delete("db/db2.mdb");
             ZipFile.ExtractToDirectory(dbFilePath, "db");
             originalFilePath = dbFilePath;
             DB = new OdbcConnection();
-            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=db/db.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
+            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=db/db2.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
             DB.ConnectionString = connectionString;
             DB.Open();
         }
@@ -44,6 +45,7 @@ namespace ADAMM {
             String[] info = new String[] { r.GetString(0), r.GetDate(1).ToString("M/d/yy")};
             return info;
         }
+
         public List<Event> createEvents(List<Division> divisions) {
             List<Event> events = new List<Event>();
             OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Num_prelanes, Div_no, Event_stat, Event_stroke, Event_dist, Res_meas, Trk_Field FROM Event ORDER BY Event_no ASC");
@@ -65,11 +67,17 @@ namespace ADAMM {
 
         public List<Team> createTeams(List<Division> divisions) {
             List<Team> teams = new List<Team>();
-            OdbcCommand com = new OdbcCommand("SELECT Team_no, Team_name, Team_abbr, Team_short FROM Team ORDER BY Team_name ASC");
+            OdbcCommand com = new OdbcCommand("SELECT Team_no, Team_name, team_short, Team_abbr, Team_city, Team_state, Team_zip, Team_cntry FROM Team ORDER BY Team_name ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3), divisions));
+                if (r.IsDBNull(4))
+                    Console.WriteLine("Here");
+                teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3),
+                    r.IsDBNull(4) ? "" : r.GetString(4),
+                    r.IsDBNull(5) ? "" : r.GetString(5),
+                    r.IsDBNull(6) ? "" : r.GetString(6),
+                    r.IsDBNull(7) ? "" : r.GetString(7), divisions));
             }
             return teams;
         }
@@ -112,6 +120,17 @@ namespace ADAMM {
             return entries;
         }
 
+        public List<Entry> getUnseededEntries(Event e) {
+            OdbcCommand com = new OdbcCommand("SELECT Ath_no FROM Entry WHERE Event_ptr = " + e.EventPointer + ";");
+            com.Connection = DB;
+            OdbcDataReader r = com.ExecuteReader();
+            List<Entry> entries = new List<Entry>();
+            while (r.Read()) {
+                entries.Add(new Entry(0, 0, r.GetInt32(0), e));
+            }
+            return entries;
+        }
+
         public void updateAthleteRecord(Athlete ath) {
             OdbcCommand com = new OdbcCommand(
                 String.Format("UPDATE Athlete SET First_name='{0}', Last_name='{1}', Ath_sex='{2}', Team_no={3} WHERE Ath_no = {4};",
@@ -120,10 +139,17 @@ namespace ADAMM {
             com.ExecuteNonQuery();
             finishUpdate();
         }
-        public void updateTeamRecord() {
 
+        public void updateTeamRecord(Team t) {
+            OdbcCommand com = new OdbcCommand(
+                String.Format("UPDATE Team SET Team_name='{0}', team_short='{1}', Team_abbr='{2}', Team_city='{3}', Team_state='{4}', Team_zip='{5}', Team_cntry='{6}' WHERE Team_no = {7};",
+                t.TeamLongName, t.TeamShortName, t.TeamAbbrev, t.TeamCity, t.TeamState, t.TeamZip, t.TeamCountry, t.TeamNumber));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+            finishUpdate();
         }
-        public void updateEventRecord() {
+
+        public void updateEventRecord(Event e) {
 
         }
 

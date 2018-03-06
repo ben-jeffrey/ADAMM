@@ -78,7 +78,7 @@ namespace ADAMM {
             List<Event> entered = new List<Event>();
             foreach (Event ev in athleteEnteredEvents.Items)
                 entered.Add(ev);
-            m.updateEntries(currentAthlete, entered);
+            m.updateEntriesForAthlete(currentAthlete, entered);
         }
 
         private void athleteRevert_Click(object sender, RoutedEventArgs e) {
