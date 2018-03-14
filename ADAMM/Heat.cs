@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ADAMM {
     public class Heat {
+        static Random rng = new Random();
         public Event HeatEvent { get; set; }
         public int HeatNumber { get; set; }
         public static MeetDatabase MeetDB;
@@ -31,6 +32,23 @@ namespace ADAMM {
                     break;
                 }
             }
+        }
+
+        public Entry addRandomEntry(List<Entry> entries) {
+            Entry choice = entries[rng.Next(entries.Count)];
+            int position = nextPosition();
+            HeatEntries.Insert(position, choice);
+            choice.EntryPosition = position+1;
+            choice.EntryHeat = HeatNumber;
+            return choice;
+        }
+
+        public Entry addEntryToNext(Entry entry) {
+            int position = nextPosition();
+            HeatEntries.Insert(position, entry);
+            entry.EntryPosition = position+1;
+            entry.EntryHeat = HeatNumber;
+            return entry;
         }
 
         public void removeAthlete(Athlete a) {
@@ -74,8 +92,22 @@ namespace ADAMM {
             return false;
         }
 
+        public int nextPosition() {
+            if (HeatEvent.EventPositionCount > 0) {
+                int position = HeatEvent.EventPositionCount / 2;
+                int alternator = 1;
+                for (int i = 1; i < HeatEvent.EventPositionCount; i++) {
+                    if (HeatEntries.ElementAtOrDefault(position) != null)
+                        return position;
+                    position = position + (i * alternator);
+                    alternator *= -1;
+                }
+            }
+            return HeatEntries.Count;
+        }
+
         public bool full() {
-            return HeatEntries.Count >= HeatEvent.EventPositionCount;
+            return HeatEntries.Count >= HeatEvent.EventPositionCount && HeatEvent.EventPositionCount > 0;
         }
     }
 }

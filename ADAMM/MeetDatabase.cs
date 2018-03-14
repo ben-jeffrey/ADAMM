@@ -110,12 +110,17 @@ namespace ADAMM {
         }
 
         public List<Entry> getEntries(Event e) {
-            OdbcCommand com = new OdbcCommand("SELECT Fin_lane, Fin_heat, Ath_no FROM Entry WHERE Event_ptr = " + e.EventPointer + " ORDER BY Fin_heat ASC, Fin_lane ASC;");
+            OdbcCommand com = new OdbcCommand("SELECT Fin_lane, Fin_heat, Ath_no, ActualSeed_time FROM Entry WHERE Event_ptr = " + e.EventPointer + " ORDER BY Fin_heat ASC, Fin_lane ASC;");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             List<Entry> entries = new List<Entry>();
             while (r.Read()) {
-                entries.Add(new Entry(r.GetInt32(0), r.GetInt32(1), r.GetInt32(2), e));
+                Entry newEntry = new Entry(r.GetInt32(0), r.GetInt32(1), r.GetInt32(2), e);
+                if (!r.GetValue(3).GetType().Equals(typeof(DBNull)))
+                    newEntry.EntrySeedMark = r.GetFloat(3);
+                else newEntry.EntrySeedMark = 0;
+                entries.Add(newEntry);
+                
             }
             return entries;
         }

@@ -11,6 +11,7 @@ namespace ADAMM {
         public int EntryAthletePointer { get; set; }
         public Athlete EntryAthlete { get; set; }
         public Event EntryEvent { get; set; }
+        public double EntrySeedMark { get; set; }
 
         public Entry(int pos, int h, int a, Event e) {
             EntryPosition = pos;

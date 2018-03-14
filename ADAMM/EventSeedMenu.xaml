@@ -14,11 +14,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <ComboBox>
+            <ComboBox x:Name="SeedTypeCombo">
                 <ComboBoxItem Content="Snake" />
                 <ComboBoxItem Content="Standard" />
+                <ComboBoxItem Content="Random" />
             </ComboBox>
-            <Button Content="Seed" />
+            <Button Content="Seed" Click="Seed_Click" />
         </StackPanel>
         <ListView Grid.Row="1" x:Name="SeedEntryList">
             <ListView.View>

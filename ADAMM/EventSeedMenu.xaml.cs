@@ -34,5 +34,51 @@ namespace ADAMM {
             SeedEntryList.ItemsSource = e.EventUnseededEntries;
         }
 
+        private void Seed_Click(object sender, RoutedEventArgs e) {
+            int numHeats = 1;
+            List<Heat> heats = new List<Heat>();
+            List<Entry> entries = new List<Entry>();
+            entries.AddRange(evt.EventUnseededEntries);
+
+            if (evt.EventPositionCount > 0)
+                numHeats = (int)Math.Ceiling((double)entries.Count / evt.EventPositionCount);
+
+            for (int i = 0; i < numHeats; i++)
+                heats.Add(new Heat(evt, i+1));
+
+            Heat currentHeat = heats[0];
+
+            switch (((ComboBoxItem)SeedTypeCombo.SelectedItem).Content) {
+                case "Random":
+                    while (entries.Count > 0) {
+                        while (!currentHeat.full() && entries.Count > 0) {
+                            entries.Remove(currentHeat.addRandomEntry(entries));
+                        }
+                        currentHeat = currentHeat.HeatNumber == heats.Count ? currentHeat : heats[currentHeat.HeatNumber];
+                    }
+                    break;
+                case "Standard":
+                    entries = entries.OrderBy(ent => ent.EntrySeedMark).ToList();
+                    while (entries.Count > 0) {
+                        while (!currentHeat.full() && entries.Count > 0) {
+                            entries.Remove(currentHeat.addEntryToNext(entries[0]));
+                        }
+                        currentHeat = currentHeat.HeatNumber == heats.Count ? currentHeat : heats[currentHeat.HeatNumber];
+                    }
+                    break;
+                case "Snake":
+                    entries = entries.OrderBy(ent => ent.EntrySeedMark).ToList();
+                    while (entries.Count > 0) {
+                        entries.Remove(currentHeat.addEntryToNext(entries[0]));
+                        currentHeat = currentHeat.HeatNumber == heats.Count ? heats[0] : heats[currentHeat.HeatNumber];
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            evt.EventHeats = heats;
+            evt.EventStatus = "1";
+        }
     }
 }

@@ -106,6 +106,7 @@ namespace ADAMM
                 case 'S': return "Scored";
                 case 'U': return "Unseeded";
                 case 'A': return "Done";
+                case '1': return "Seeded";
                 default: return "Unknown";
             }
         }
@@ -115,6 +116,7 @@ namespace ADAMM
                 case 'S': return "Green";
                 case 'U': return "White";
                 case 'A': return "Gray";
+                case '1': return "Blue";
                 default: return "Red";
             }
         }
