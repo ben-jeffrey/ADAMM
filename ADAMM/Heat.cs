@@ -37,16 +37,16 @@ namespace ADAMM {
         public Entry addRandomEntry(List<Entry> entries) {
             Entry choice = entries[rng.Next(entries.Count)];
             int position = nextPosition();
-            HeatEntries.Insert(position, choice);
-            choice.EntryPosition = position+1;
+            HeatEntries.Insert(position-1, choice);
+            choice.EntryPosition = position;
             choice.EntryHeat = HeatNumber;
             return choice;
         }
 
         public Entry addEntryToNext(Entry entry) {
             int position = nextPosition();
-            HeatEntries.Insert(position, entry);
-            entry.EntryPosition = position+1;
+            HeatEntries.Insert(position-1, entry);
+            entry.EntryPosition = position;
             entry.EntryHeat = HeatNumber;
             return entry;
         }
@@ -98,12 +98,12 @@ namespace ADAMM {
                 int alternator = 1;
                 for (int i = 1; i < HeatEvent.EventPositionCount; i++) {
                     if (HeatEntries.ElementAtOrDefault(position) != null)
-                        return position;
+                        return position + 1;
                     position = position + (i * alternator);
                     alternator *= -1;
                 }
             }
-            return HeatEntries.Count;
+            return HeatEntries.Count + 1;
         }
 
         public bool full() {

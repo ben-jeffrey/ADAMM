@@ -27,7 +27,7 @@
                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding Path=EntryPosition}" />
                     <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteFirstName}" />
                     <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteLastName}" />
-                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteTeam.shortName}" />
+                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteTeam.TeamShortName}" />
                 </GridView>
             </ListView.View>
         </ListView>

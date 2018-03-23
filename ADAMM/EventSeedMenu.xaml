@@ -22,11 +22,23 @@
             <Button Content="Seed" Click="Seed_Click" />
         </StackPanel>
         <ListView Grid.Row="1" x:Name="SeedEntryList">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="False" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Path=IsSelected, Mode=OneWayToSource}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteFirstName}" />
                     <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteLastName}" />
-                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteTeam.shortName}" />
+                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=EntryAthlete.AthleteTeam.TeamShortName}" />
                 </GridView>
             </ListView.View>
         </ListView>
