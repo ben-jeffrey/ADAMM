@@ -49,7 +49,7 @@ namespace ADAMM {
                 seedWithBreaks();
             }
 
-            // Update the entries in the Db
+            m.addEventEntries(evt);
 
             ReturnTo.PageFinished();
         }

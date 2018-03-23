@@ -158,6 +158,15 @@ namespace ADAMM {
 
         }
 
+        public void updateEntryRecord(Entry e) {
+            OdbcCommand com = new OdbcCommand(
+                String.Format("UPDATE Team SET ActualSeed_time={0}, Fin_heat={1}, Fin_lane={2} WHERE Event_ptr={3} AND Ath_no={4};",
+                e.EntrySeedMark, e.EntryHeat, e.EntryPosition, e.EntryEvent.EventPointer, e.EntryAthletePointer));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+            finishUpdate();
+        }
+
         public void insertNewAthlete(Athlete ath) {
             OdbcCommand com = new OdbcCommand("SELECT MAX(Comp_no) FROM Athlete");
             com.Connection = DB;
@@ -187,6 +196,15 @@ namespace ADAMM {
             finishUpdate();
         }
 
+        public void insertNewEntry(Entry e) {
+            OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Entry (Event_ptr, Ath_no, ActSeed_course, ConvSeed_course, Hand_time, Fin_heat, Fin_lane)" +
+                "VALUES ({0}, {1}, '{2}', '{2}', FALSE, {3}, {4})",
+                e.EntryEvent.EventPointer, e.EntryAthletePointer, e.EntryEvent.EventUnit, e.EntryHeat, e.EntryPosition));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+            finishUpdate();
+        }
+
         public void insertNewEvent(Event e) {
             char Trk_Field = e.GetType() == typeof(FieldEvent) ? 'F' : 'T';
             OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Event (Event_no, Event_gender, Event_dist, Event_stroke, Event_stat, Trk_Field, Res_Meas, Num_prelanes, Div_no)" +
@@ -205,6 +223,13 @@ namespace ADAMM {
 
         public void removeEntry(Athlete ath, Event ev) {
             OdbcCommand com = new OdbcCommand(String.Format("DELETE FROM Entry WHERE Event_ptr={0} AND Ath_no={1}", ev.EventPointer, ath.AthletePointer));
+            com.Connection = DB;
+            com.ExecuteNonQuery();
+            finishUpdate();
+        }
+
+        public void removeEntry(Entry e) {
+            OdbcCommand com = new OdbcCommand(String.Format("DELETE FROM Entry WHERE Event_ptr={0} AND Ath_no={1}", e.EntryEvent.EventPointer, e.EntryAthletePointer));
             com.Connection = DB;
             com.ExecuteNonQuery();
             finishUpdate();

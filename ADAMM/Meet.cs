@@ -133,15 +133,26 @@ namespace ADAMM
         }
 
         public void removeEntries(List<Entry> toRemove) {
-
+            foreach (Entry ent in toRemove)
+                MeetDB.removeEntry(ent);
         }
 
         public void updateEntries(List<Entry> toUpdate) {
-
+            foreach (Entry ent in toUpdate)
+                MeetDB.updateEntryRecord(ent);
         }
 
         public void addEntries(List<Entry> toAdd) {
+            foreach (Entry ent in toAdd)
+                MeetDB.insertNewEntry(ent);
+        }
 
+        public void addEventEntries(Event e) {
+            List<Entry> flatEntries = new List<Entry>();
+            foreach (Heat h in e.EventHeats)
+                foreach (Entry ent in h.HeatEntries)
+                    flatEntries.Add(ent);
+            addEntries(flatEntries);
         }
 
         #endregion
