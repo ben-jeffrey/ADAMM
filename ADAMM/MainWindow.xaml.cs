@@ -24,7 +24,7 @@ namespace ADAMM
 
         public MainWindow() {
             InitializeComponent();
-            m = new Meet("C:\\Users\\PinQiblo2\\Desktop\\db2.zip");
+            m = new Meet("C:\\Users\\PinQiblo2\\Desktop\\db.zip");
             Title = m.ToString();
             EventTabFrame.Navigate(new EventTab(), m);
             AthleteTabFrame.Navigate(new AthleteTab(), m);

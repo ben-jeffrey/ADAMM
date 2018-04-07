@@ -22,6 +22,7 @@ namespace ADAMM
         private string firstName;
         public string AthleteLastName { get { return lastName; } set { lastName = value; OnPropertyChanged(); } }
         private string lastName;
+        public string AthleteFullName { get { return lastName + ", " + firstName; } }
         public char AthleteGender { get { return gender; } set { gender = value; OnPropertyChanged(); } }
         private char gender;
         public Division AthleteDivision { get { return division; } set { division = value; OnPropertyChanged(); } }

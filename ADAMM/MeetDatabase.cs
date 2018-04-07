@@ -14,39 +14,37 @@ namespace ADAMM {
 
         public MeetDatabase(string dbFilePath) {
             //pX47P(sA_dfQ-r)-651V
-            File.Delete("db/db2.mdb");
+            File.Delete("db/db.mdb");
             ZipFile.ExtractToDirectory(dbFilePath, "db");
             originalFilePath = dbFilePath;
             DB = new OdbcConnection();
-            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=db/db2.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
+            string connectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=db/db.mdb;Uid=Admin;Pwd=pX47P(sA_dfQ-r)-651V;";
             DB.ConnectionString = connectionString;
-            DB.Open();
-        }
-
-        private void open() {
-            /*try {
-                DB.Open();
-            } catch (Exception e) {
-                Console.WriteLine(e.StackTrace);
-            }*/
         }
 
         public void close() {
             DB.Close();
-            finishUpdate();
-            File.Delete("db/db.mdb");
+        }
+
+        private void open() {
+            if (DB.State != System.Data.ConnectionState.Open)
+                DB.Open();
         }
 
         public String[] getMeetInfo() {
+            open();
             OdbcCommand com = new OdbcCommand("SELECT Meet_name1, Meet_start FROM Meet");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             r.Read();
             String[] info = new String[] { r.GetString(0), r.GetDate(1).ToString("M/d/yy")};
+            r.Close();
+            DB.Close();
             return info;
         }
 
         public List<Event> createEvents(List<Division> divisions) {
+            open();
             List<Event> events = new List<Event>();
             OdbcCommand com = new OdbcCommand("SELECT Event_no, Event_ptr, Event_gender, Num_prelanes, Div_no, Event_stat, Event_stroke, Event_dist, Res_meas, Trk_Field FROM Event ORDER BY Event_no ASC");
             com.Connection = DB;
@@ -57,32 +55,39 @@ namespace ADAMM {
                     if (d.DivisionNumber == r.GetInt32(4))
                         eventDivision = d;
                 if (r.GetChar(9) == 'T') {
-                    //Console.WriteLine(r.GetInt16(3));
                     events.Add(new RunningEvent(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], r.GetInt16(3), eventDivision, r.GetString(5)[0], r.GetString(6)[0], (int)r.GetFloat(7), r.GetString(8)[0]));
                 } else
                     events.Add(new FieldEvent(r.GetInt16(0), r.GetInt32(1), r.GetString(2)[0], eventDivision, r.GetString(5)[0], r.GetString(6)[0], r.GetString(8)[0]));
             }
+            r.Close();
+            foreach (Event e in events) {
+                e.populate();
+            }
+            DB.Close();
             return events;
         }
 
         public List<Team> createTeams(List<Division> divisions) {
+            open();
             List<Team> teams = new List<Team>();
             OdbcCommand com = new OdbcCommand("SELECT Team_no, Team_name, team_short, Team_abbr, Team_city, Team_state, Team_zip, Team_cntry FROM Team ORDER BY Team_name ASC");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
             while (r.Read()) {
-                if (r.IsDBNull(4))
-                    Console.WriteLine("Here");
                 teams.Add(new Team(r.GetInt32(0), r.GetString(1), r.GetString(2), r.GetString(3),
                     r.IsDBNull(4) ? "" : r.GetString(4),
                     r.IsDBNull(5) ? "" : r.GetString(5),
                     r.IsDBNull(6) ? "" : r.GetString(6),
-                    r.IsDBNull(7) ? "" : r.GetString(7), divisions));
+                    r.IsDBNull(7) ? "" : r.GetString(7)));
             }
+            foreach (Team t in teams)
+                t.populate(divisions);
+            DB.Close();
             return teams;
         }
 
         public List<Athlete> createTeamRoster(List<Division> divisions, int teamNum) {
+            open();
             List<Athlete> athletes = new List<Athlete>();
             OdbcCommand com = new OdbcCommand("SELECT Comp_no, Ath_no, First_name, Last_name, Ath_Sex, Ath_age  FROM Athlete WHERE Team_no = " + teamNum);
             com.Connection = DB;
@@ -94,10 +99,13 @@ namespace ADAMM {
                         athleteDivision = d;
                 athletes.Add(new Athlete(r.GetInt32(0), r.GetInt32(1), r.GetString(2), r.GetString(3), r.GetString(4)[0], athleteDivision));
             }
+            r.Close();
+            //DB.Close();
             return athletes;
         }
 
         public List<Division> createDivisions() {
+            open();
             List<Division> divisions = new List<Division>();
             OdbcCommand com = new OdbcCommand("SELECT Div_no, Div_name, low_age, high_age FROM Divisions;");
             com.Connection = DB;
@@ -106,10 +114,13 @@ namespace ADAMM {
                 if (!r.GetValue(2).GetType().Equals(typeof(DBNull)))
                     divisions.Add(new Division(r.GetInt32(0), r.GetString(1), r.GetInt16(2), r.GetInt16(3)));
             }
+            r.Close();
+            DB.Close();
             return divisions;
         }
 
         public List<Entry> getEntries(Event e) {
+            open();
             OdbcCommand com = new OdbcCommand("SELECT Fin_lane, Fin_heat, Ath_no, ActualSeed_time FROM Entry WHERE Event_ptr = " + e.EventPointer + " ORDER BY Fin_heat ASC, Fin_lane ASC;");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
@@ -120,37 +131,55 @@ namespace ADAMM {
                     newEntry.EntrySeedMark = r.GetFloat(3);
                 else newEntry.EntrySeedMark = 0;
                 entries.Add(newEntry);
-                
             }
+            r.Close();
+            //DB.Close();
             return entries;
         }
 
         public List<Entry> getUnseededEntries(Event e) {
-            OdbcCommand com = new OdbcCommand("SELECT Ath_no FROM Entry WHERE Event_ptr = " + e.EventPointer + ";");
-            com.Connection = DB;
-            OdbcDataReader r = com.ExecuteReader();
             List<Entry> entries = new List<Entry>();
-            while (r.Read()) {
-                entries.Add(new Entry(0, 0, r.GetInt32(0), e));
+            if (e.isSeeded()) {
+                foreach (Heat h in e.EventHeats)
+                    foreach (Entry ent in h.HeatEntries)
+                        entries.Add(ent);
+            }
+            else {
+                open();
+                OdbcCommand com = new OdbcCommand("SELECT Ath_no, ActualSeed_time FROM Entry WHERE Event_ptr = " + e.EventPointer + ";");
+                com.Connection = DB;
+                OdbcDataReader r = com.ExecuteReader();
+                while (r.Read()) {
+                    Entry newEntry = new Entry(0, 0, r.GetInt32(0), e);
+                    if (!r.GetValue(1).GetType().Equals(typeof(DBNull)))
+                        newEntry.EntrySeedMark = r.GetFloat(1);
+                    entries.Add(newEntry);
+                }
+                r.Close();
+                //DB.Close();
             }
             return entries;
         }
 
         public void updateAthleteRecord(Athlete ath) {
+            open();
             OdbcCommand com = new OdbcCommand(
                 String.Format("UPDATE Athlete SET First_name='{0}', Last_name='{1}', Ath_sex='{2}', Team_no={3} WHERE Ath_no = {4};",
                 ath.AthleteFirstName, ath.AthleteLastName, ath.AthleteGender, ath.AthleteTeam.TeamNumber, ath.AthletePointer));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 
         public void updateTeamRecord(Team t) {
+            open();
             OdbcCommand com = new OdbcCommand(
                 String.Format("UPDATE Team SET Team_name='{0}', team_short='{1}', Team_abbr='{2}', Team_city='{3}', Team_state='{4}', Team_zip='{5}', Team_cntry='{6}' WHERE Team_no = {7};",
                 t.TeamLongName, t.TeamShortName, t.TeamAbbrev, t.TeamCity, t.TeamState, t.TeamZip, t.TeamCountry, t.TeamNumber));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 
@@ -159,15 +188,18 @@ namespace ADAMM {
         }
 
         public void updateEntryRecord(Entry e) {
+            open();
             OdbcCommand com = new OdbcCommand(
                 String.Format("UPDATE Team SET ActualSeed_time={0}, Fin_heat={1}, Fin_lane={2} WHERE Event_ptr={3} AND Ath_no={4};",
                 e.EntrySeedMark, e.EntryHeat, e.EntryPosition, e.EntryEvent.EventPointer, e.EntryAthletePointer));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 
         public void insertNewAthlete(Athlete ath) {
+            open();
             OdbcCommand com = new OdbcCommand("SELECT MAX(Comp_no) FROM Athlete");
             com.Connection = DB;
             OdbcDataReader r = com.ExecuteReader();
@@ -184,28 +216,34 @@ namespace ADAMM {
             r.Read();
             ath.AthletePointer = r.GetInt32(0);
 
+            DB.Close();
             finishUpdate();
         }
 
         public void insertNewEntry(Athlete ath, Event ev, Heat he, int lane) {
+            open();
             OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Entry (Event_ptr, Ath_no, ActSeed_course, ConvSeed_course, Hand_time, Fin_heat, Fin_lane)" +
                 "VALUES ({0}, {1}, '{2}', '{2}', FALSE, {3}, {4})",
                 ev.EventPointer, ath.AthletePointer, ev.EventUnit, he.HeatNumber, lane));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 
         public void insertNewEntry(Entry e) {
+            open();
             OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Entry (Event_ptr, Ath_no, ActSeed_course, ConvSeed_course, Hand_time, Fin_heat, Fin_lane)" +
                 "VALUES ({0}, {1}, '{2}', '{2}', FALSE, {3}, {4})",
                 e.EntryEvent.EventPointer, e.EntryAthletePointer, e.EntryEvent.EventUnit, e.EntryHeat, e.EntryPosition));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 
         public void insertNewEvent(Event e) {
+            open();
             char Trk_Field = e.GetType() == typeof(FieldEvent) ? 'F' : 'T';
             OdbcCommand com = new OdbcCommand(String.Format("INSERT INTO Event (Event_no, Event_gender, Event_dist, Event_stroke, Event_stat, Trk_Field, Res_Meas, Num_prelanes, Div_no)" +
                 "VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', '{6}', {7}, {8});",
@@ -218,20 +256,25 @@ namespace ADAMM {
             OdbcDataReader r = com.ExecuteReader();
             r.Read();
             e.EventPointer = r.GetInt32(0);
+            DB.Close();
             finishUpdate();
         }
 
         public void removeEntry(Athlete ath, Event ev) {
+            open();
             OdbcCommand com = new OdbcCommand(String.Format("DELETE FROM Entry WHERE Event_ptr={0} AND Ath_no={1}", ev.EventPointer, ath.AthletePointer));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 
         public void removeEntry(Entry e) {
+            open();
             OdbcCommand com = new OdbcCommand(String.Format("DELETE FROM Entry WHERE Event_ptr={0} AND Ath_no={1}", e.EntryEvent.EventPointer, e.EntryAthletePointer));
             com.Connection = DB;
             com.ExecuteNonQuery();
+            DB.Close();
             finishUpdate();
         }
 

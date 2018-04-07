@@ -38,6 +38,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,13 +61,16 @@
     <Compile Include="AthleteTab.xaml.cs">
       <DependentUpon>AthleteTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CreateEventMenu.xaml.cs">
-      <DependentUpon>CreateEventMenu.xaml</DependentUpon>
+    <Compile Include="EventCreateMenu.xaml.cs">
+      <DependentUpon>EventCreateMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Division.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="EventAdjustMenu.xaml.cs">
       <DependentUpon>EventAdjustMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EventReportMenu.xaml.cs">
+      <DependentUpon>EventReportMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="EventSeedMenu.xaml.cs">
       <DependentUpon>EventSeedMenu.xaml</DependentUpon>
@@ -85,6 +89,8 @@
     <Compile Include="MeetDatabase.cs" />
     <Compile Include="MultiEvent.cs" />
     <Compile Include="RelayEvent.cs" />
+    <Compile Include="Report.cs" />
+    <Compile Include="ReportPage.cs" />
     <Compile Include="RunningEvent.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="TeamEditMenu.xaml.cs">
@@ -97,11 +103,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CreateEventMenu.xaml">
+    <Page Include="EventCreateMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EventAdjustMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EventReportMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,6 +145,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Reports\FlowDocument1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TeamEditMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -171,5 +185,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

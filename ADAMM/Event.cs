@@ -1,43 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ADAMM
 {
-    public class Event : IComparable {
+    public class Event : IComparable, INotifyPropertyChanged {
         public static MeetDatabase MeetDB;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string EventName { get { return ToString(); } }
         public int EventNumber { get; }
-        public int EventPointer { get; set; }
-        public char EventGender { get; set; }
-        public int EventPositionCount { get; }
-        public Division EventDivision { get; set; }
-        public string EventStatus { get { return StatusString(); } set { status = value[0]; } }
+        public int EventPointer { get { return pointer; } set { pointer = value; OnPropertyChanged(); } }
+        int pointer;
+        public char EventGender { get { return gender; } set { gender = value; OnPropertyChanged(); } }
+        char gender;
+        public int EventPositionCount { get { return positionCount; } set { positionCount = value; OnPropertyChanged(); } }
+        int positionCount;
+        public Division EventDivision { get { return division; } set { division = value; OnPropertyChanged(); } }
+        Division division;
+        public string EventStatus { get { return StatusString(); } set { status = value[0]; OnPropertyChanged(); } }
         private char status;
         public string EventStatusColor { get { return StatusColor(); } }
-        public string EventCategory { get { return CategoryString(); } set { category = value[0]; } }
+        public string EventCategory { get { return CategoryString(); } set { category = value[0]; OnPropertyChanged(); } }
         private char category;
-        public int EventDistance {get; set;}
-        public char EventUnit { get; set; }
-        public List<Heat> EventHeats { get; set; }
-        public List<Entry> EventUnseededEntries { get; set; }
-        private int level { get; set; }
+        public int EventDistance { get { return distance; } set { distance = value; OnPropertyChanged(); } }
+        int distance;
+        public char EventUnit { get { return unit; } set { unit = value; OnPropertyChanged(); } }
+        char unit;
+        public List<Heat> EventHeats { get { return heats; } set { heats = value; OnPropertyChanged(); } }
+        List<Heat> heats;
+        public List<Entry> EventUnseededEntries { get { return unseededEntries; } set { unseededEntries = value; OnPropertyChanged(); } }
+        List<Entry> unseededEntries;
 
-        public Event(int number, int ptr, char gender, int posCount, Division div, char stat, char cat, int dist, char unit) {
+        public Event(int number, int ptr, char gen, int posCount, Division div, char stat, char cat, int dist, char un) {
             EventNumber = number;
-            EventPointer = ptr;
-            EventGender = gender;
-            EventPositionCount = posCount;
-            EventDivision = div;
+            pointer = ptr;
+            gender = gen;
+            positionCount = posCount;
+            division = div;
             status = stat;
             category = cat;
-            EventDistance = dist;
-            EventUnit = unit;
-            EventHeats = new List<Heat>();
-            EventUnseededEntries = new List<Entry>();
-            if (ptr >= 0 && isSeeded()) createHeats();
-            else EventUnseededEntries = MeetDB.getUnseededEntries(this);
+            distance = dist;
+            unit = un;
+            heats = new List<Heat>();
+            unseededEntries = new List<Entry>();
+        }
+
+        public void populate() {
+            if (EventPointer >= 0 && isSeeded()) createHeats();
+            EventUnseededEntries = MeetDB.getUnseededEntries(this);
         }
 
         private void createHeats() {
@@ -154,6 +169,11 @@ namespace ADAMM
 
         public int CompareTo(object obj) {
             return EventNumber.CompareTo(((Event)obj).EventNumber);
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

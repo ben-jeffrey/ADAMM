@@ -1,0 +1,32 @@
+﻿<FixedDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <PageContent xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+        <FixedPage>
+            <TextBlock Text="{Binding EventName}" />
+            <ListView ItemsSource="{Binding}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding EventName}" />
+                            <ListView  ItemsSource="{Binding EventUnseededEntries}" Focusable="False" Background="Transparent" BorderThickness="0">
+                                <ListView.Resources>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Focusable" Value="False" />
+                                    </Style>
+                                </ListView.Resources>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding EntryAthlete.AthleteFullName}" />
+                                            <GridViewColumn Header="Mark" DisplayMemberBinding="{Binding EntrySeedMark}" />
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </FixedPage>
+    </PageContent>
+
+</FixedDocument>

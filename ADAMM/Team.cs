@@ -8,7 +8,7 @@ namespace ADAMM
 {
     public class Team {
         public static MeetDatabase MeetDB;
-        public List<Athlete> TeamRoster { get; }
+        public List<Athlete> TeamRoster { get; set; }
         public int TeamNumber { get; }
         public string TeamLongName { get; set; }
         public string TeamShortName { get; set; }
@@ -18,7 +18,7 @@ namespace ADAMM
         public string TeamZip { get; set; }
         public string TeamCountry { get; set; }
 
-        public Team(int num, String lName, String sName, String abbr, String city, String state, String zip, String country, List<Division> divisions) {
+        public Team(int num, String lName, String sName, String abbr, String city, String state, String zip, String country) {
             TeamNumber = num;
             TeamLongName = lName;
             TeamShortName = sName;
@@ -27,6 +27,9 @@ namespace ADAMM
             TeamState = state;
             TeamZip = zip;
             TeamCountry = country;
+        }
+
+        public void populate(List<Division> divisions) {
             TeamRoster = MeetDB.createTeamRoster(divisions, TeamNumber);
             foreach (Athlete a in TeamRoster)
                 a.AthleteTeam = this;

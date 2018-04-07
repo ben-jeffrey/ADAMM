@@ -1,0 +1,24 @@
+﻿<Page x:Class="ADAMM.EventReportMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADAMM"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="EventReportMenu">
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Report Type: " />
+                <ComboBox x:Name="reportType" SelectedIndex="0">
+                    <ComboBoxItem Content="Results" />
+                    <ComboBoxItem Content="Heat Sheets" />
+                    <ComboBoxItem Content="Field Score Sheets" />
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+        <DocumentViewer x:Name="docDisplay" />
+    </StackPanel>
+</Page>

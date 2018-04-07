@@ -63,6 +63,13 @@ namespace ADAMM {
             eventInteractionPane.Navigate(new EventSeedMenu(), eventList.SelectedItem);
         }
 
+        private void reportEvent_Click(object sender, RoutedEventArgs e) {
+            List<Event> tempEventList = new List<Event>();
+            foreach (Event evt in eventList.SelectedItems)
+                tempEventList.Add(evt);
+            eventInteractionPane.Navigate(new EventReportMenu(), tempEventList);
+        }
+
         private void EventPane_LoadCompleted(object sender, NavigationEventArgs e) {
             if (e.Content.GetType() == typeof(HeatTabsContainer)) {
                 List<Heat> h = (List<Heat>)e.ExtraData;
@@ -79,6 +86,10 @@ namespace ADAMM {
                 Event selectedEvent = (Event)e.ExtraData;
                 ((EventSeedMenu)e.Content).Setup(m, selectedEvent);
                 ((EventSeedMenu)e.Content).ReturnTo = this;
+            } else if (e.Content.GetType() == typeof(EventReportMenu)) {
+                List<Event> selectedEvents = (List<Event>)e.ExtraData;
+                ((EventReportMenu)e.Content).Setup(m, selectedEvents);
+                ((EventReportMenu)e.Content).ReturnTo = this;
             }
         }
 
