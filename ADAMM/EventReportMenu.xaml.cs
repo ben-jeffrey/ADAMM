@@ -30,7 +30,7 @@ namespace ADAMM {
         public void Setup(Meet m, List<Event> e) {
             //PrintDialog printDialog = new PrintDialog();
 
-            Report report = new Report(e);
+            Report report = new Report(e, m);
             
             //doc.Name = "TEST";
             IDocumentPaginatorSource paginatorSource = report.Document;

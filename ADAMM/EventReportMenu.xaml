@@ -8,17 +8,19 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="EventReportMenu">
 
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Report Type: " />
-                <ComboBox x:Name="reportType" SelectedIndex="0">
-                    <ComboBoxItem Content="Results" />
-                    <ComboBoxItem Content="Heat Sheets" />
-                    <ComboBoxItem Content="Field Score Sheets" />
-                </ComboBox>
-            </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Report Type: " />
+            <ComboBox x:Name="reportType" SelectedIndex="0">
+                <ComboBoxItem Content="Results" />
+                <ComboBoxItem Content="Heat Sheets" />
+                <ComboBoxItem Content="Field Score Sheets" />
+            </ComboBox>
         </StackPanel>
-        <DocumentViewer x:Name="docDisplay" />
-    </StackPanel>
+        <DocumentViewer x:Name="docDisplay" Grid.Row="1" />
+    </Grid>
 </Page>

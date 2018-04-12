@@ -9,8 +9,8 @@ namespace ADAMM
 {
     public class Meet {
         public MeetDatabase MeetDB { get; }
-        private String MeetName;
-        private String MeetDate;
+        public String MeetName { get; set; }
+        public String MeetDate { get; set; }
         public List<Event> MeetEvents { get; set; }
         public List<Team> MeetTeams { get; set; }
         public List<Division> MeetDivisions { get; set; }

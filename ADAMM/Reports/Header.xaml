@@ -1,0 +1,11 @@
+﻿<FixedDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <PageContent xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+        <FixedPage>
+            <StackPanel HorizontalAlignment="Stretch" Width="768">
+                <TextBlock Text="{Binding MeetName}" FontSize="18pt" HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding MeetDate}" FontSize="16pt" HorizontalAlignment="Center" />
+                
+            </StackPanel>
+        </FixedPage>
+    </PageContent>
+</FixedDocument>
