@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace ADAMM {
     /// <summary>
-    /// Interaction logic for EventTab.xaml
+    /// Submenu of the top-level window meant for entering results and altering event data
     /// </summary>
     public partial class EventTab : Page {
 
@@ -25,32 +25,40 @@ namespace ADAMM {
             InitializeComponent();
         }
 
+        // Called when the page loads by the main window
         public void SetUpMeet(Meet meet) {
             m = meet;
-            foreach (Event ev in m.MeetEvents)
-                eventList.Items.Add(ev);
 
+            // Populate event list and select event #1
+            foreach (Event e in m.MeetEvents)
+                eventList.Items.Add(e);
             eventList.SelectedIndex = 0;
         }
 
+        // Called when an event list selection is changed
         private void eventList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            // If an item was added to the selection or the selection was unchanged in size
             int difference = e.AddedItems.Count - e.RemovedItems.Count;
             if (difference == 1 || difference == 0) {
+                // Display the heats of the selected event
                 Event selectedEvent = (Event)e.AddedItems[0];
                 List<Heat> selectedHeat = selectedEvent.EventHeats;
-
                 eventInteractionPane.Navigate(new HeatTabsContainer(), selectedHeat);
                 
             }
         }
 
+        // Called when a character is added to or removed from the search bar
         private void eventSearch_TextChanged(object sender, TextChangedEventArgs e) {
+            // Repopulate event list with unfiltered events
             eventList.Items.Clear();
             foreach (Event ev in m.MeetEvents)
                 if (ev.filter(eventSearch.Text))
                     eventList.Items.Add(ev);
         }
 
+
+        /* These 8 functions all send the necessary data to a submenu when the relevant button is pressed */
         private void addEvent_Click(object sender, RoutedEventArgs e) {
             eventInteractionPane.Navigate(new CreateEventMenu());
         }
@@ -73,7 +81,7 @@ namespace ADAMM {
         private void EventPane_LoadCompleted(object sender, NavigationEventArgs e) {
             if (e.Content.GetType() == typeof(HeatTabsContainer)) {
                 List<Heat> h = (List<Heat>)e.ExtraData;
-                ((HeatTabsContainer)e.Content).SetUpHeats(h);
+                ((HeatTabsContainer)e.Content).SetUp(m, h);
             } else if (e.Content.GetType() == typeof(CreateEventMenu)) {
                 ((CreateEventMenu)e.Content).Meet = m;
                 ((CreateEventMenu)e.Content).Populate();
@@ -93,8 +101,15 @@ namespace ADAMM {
             }
         }
 
+        // Called by a submenu when it's done
         public void PageFinished() {
             eventInteractionPane.Navigate(new HeatTabsContainer(), ((Event)eventList.SelectedItem).EventHeats);
+        }
+
+        // Called when the score button is clicked
+        private void scoreEvent_Click(object sender, RoutedEventArgs e) {
+            // Call the event's scoring routine
+            ((Event)eventList.SelectedItem).Score();
         }
     }
 }

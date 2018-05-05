@@ -9,23 +9,22 @@
       Title="HeatTab">
 
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="ListBoxItem">
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
-                        <Setter Property="Background" Value="White" />
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="LightGray" />
-                    </Trigger>
-                </Style.Triggers>
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="AllowDrop" Value="True" />
-                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="entryList_PreviewMouseLeftButtonDown" />
-                <EventSetter Event="Drop" Handler="entryList_Drop" />
-            </Style>
-        </Grid.Resources>
-        <ListBox x:Name="entryList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" AlternationCount="2">
+        <Button x:Name="getTimes" Grid.Column="1" VerticalAlignment="Top" Height="30" Content="Get Times" Click="getTimes_Click" />
+        <ListBox x:Name="entryList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" AlternationCount="2" Margin="0,30,0,0">
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0" >
+                            <Setter Property="Background" Value="White" />
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="LightGray" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -33,12 +32,14 @@
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding Path=EntryPosition}" />
                         <TextBlock Grid.Column="1" Text="{Binding Path=EntryAthlete.AthleteFirstName}" />
                         <TextBlock Grid.Column="2" Text="{Binding Path=EntryAthlete.AthleteLastName}" />
-                        <TextBlock Grid.Column="3" Text="{Binding Path=EntryAthlete.AthleteTeam.shortName}" />
+                        <TextBlock Grid.Column="3" Text="{Binding Path=EntryAthlete.AthleteTeam.TeamShortName}" />
+                        <TextBox Grid.Column="4" Text="{Binding Path=EntryDisplayMark, Mode=OneWay}" PreviewTextInput="TextBox_PreviewTextInput" KeyDown="TextBox_KeyDown" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

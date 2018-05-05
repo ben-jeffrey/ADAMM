@@ -24,6 +24,14 @@
             </ListView.View>
         </ListView>
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-        <Frame x:Name="TeamMenuFrame" Grid.Column="2" LoadCompleted="TeamMenuFrame_LoadCompleted" />
+        <Grid x:Name="teamData" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Frame x:Name="TeamMenuFrame" Grid.Row="0" LoadCompleted="TeamMenuFrame_LoadCompleted" />
+            <TabControl Grid.Row="1" x:Name="teamScores">
+            </TabControl>
+        </Grid>
     </Grid>
 </Page>

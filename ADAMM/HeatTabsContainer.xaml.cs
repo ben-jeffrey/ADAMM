@@ -15,17 +15,22 @@ using System.Windows.Shapes;
 
 namespace ADAMM {
     /// <summary>
-    /// Interaction logic for HeatTabsContainer.xaml
+    /// Intermediary menu to hold each of the heats of the EventTab selected event
     /// </summary>
     public partial class HeatTabsContainer : Page {
+        Meet m;
+
         public HeatTabsContainer() {
             InitializeComponent();
         }
 
-        public void SetUpHeats(List<Heat> entries) {
+        // Called by EventTab on page load
+        public void SetUp(Meet m, List<Heat> heats) {
             heatTabs.Items.Clear();
+            this.m = m;
 
-            foreach (Heat h in entries) {
+            // Manually create a tab item for each heat in the given list
+            foreach (Heat h in heats) {
                 TabItem heat = new TabItem();
                 Frame EntryFrame = new Frame();
                 EntryFrame.LoadCompleted += HeatTab_LoadCompleted;
@@ -38,13 +43,15 @@ namespace ADAMM {
                 heat.Content = EntryFrame;
                 heatTabs.Items.Add(heat);
             }
-
+            
+            // Select the first heat
             heatTabs.SelectedIndex = 0;
         }
 
+        // Pass the relevant heat to each tab when they load
         void HeatTab_LoadCompleted(object sender, NavigationEventArgs e) {
             Heat h = (Heat)e.ExtraData;
-            ((HeatTab)e.Content).SetUpEntries(h);
+            ((HeatTab)e.Content).SetUp(m, h);
         }
     }
 }

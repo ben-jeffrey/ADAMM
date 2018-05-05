@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace ADAMM {
     /// <summary>
-    /// Interaction logic for TeamEditMenu.xaml
+    /// Submenu of TeamTab for editing team data
     /// </summary>
     public partial class TeamEditMenu : Page {
 
@@ -26,11 +26,14 @@ namespace ADAMM {
             InitializeComponent();
         }
 
+        // Called by TeamTab on page load
         public void SetMeet(Meet m) {
             this.m = m;
         }
 
+        // Called by TeamTab on page load
         public void SetTeam(Team t) {
+            // Populate all of the text field with the team's data
             this.t = t;
             TeamLongName.Text = t.TeamLongName;
             TeamShortName.Text = t.TeamShortName;
@@ -42,7 +45,9 @@ namespace ADAMM {
 
         }
 
+        // Called on 'save' button click
         private void Save_Click(object sender, RoutedEventArgs e) {
+            // Write fields out to object
             t.TeamLongName = TeamLongName.Text;
             t.TeamShortName = TeamShortName.Text;
             t.TeamAbbrev = TeamAbbreviation.Text;
@@ -50,10 +55,14 @@ namespace ADAMM {
             t.TeamState = TeamState.Text;
             t.TeamZip = TeamZip.Text;
             t.TeamCountry = TeamCountry.Text;
+
+            // Update DB
             m.updateTeam(t);
         }
 
+        // Called on 'cancel' button click
         private void Cancel_Click(object sender, RoutedEventArgs e) {
+            // Rewrite the team data to the text fields
             TeamLongName.Text = t.TeamLongName;
             TeamShortName.Text = t.TeamShortName;
             TeamAbbreviation.Text = t.TeamAbbrev;

@@ -90,11 +90,14 @@
     <Compile Include="MultiEvent.cs" />
     <Compile Include="RelayEvent.cs" />
     <Compile Include="Report.cs" />
-    <Compile Include="ReportPage.cs" />
     <Compile Include="RunningEvent.cs" />
+    <Compile Include="ScheduleFile.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="TeamEditMenu.xaml.cs">
       <DependentUpon>TeamEditMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TeamScorePane.xaml.cs">
+      <DependentUpon>TeamScorePane.xaml</DependentUpon>
     </Compile>
     <Compile Include="TeamTab.xaml.cs">
       <DependentUpon>TeamTab.xaml</DependentUpon>
@@ -154,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TeamEditMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TeamScorePane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -53,6 +53,7 @@
         <Button x:Name="adjustEvent" Grid.Column="1" VerticalAlignment="Top" Height="30" Margin="0, 120, 0, 0" Content="E" Click="adjustEvent_Click" />
         <Button x:Name="seedEvent" Grid.Column="1" VerticalAlignment="Top" Height="30" Margin="0, 150, 0, 0" Content="S" Click="seedEvent_Click" />
         <Button x:Name="reportEvent" Grid.Column="1" VerticalAlignment="Top" Height="30" Margin="0, 180, 0, 0" Content="R" Click="reportEvent_Click" />
+        <Button x:Name="scoreEvent" Grid.Column="1" VerticalAlignment="Top" Height="30" Margin="0, 210, 0, 0" Content="Sc" Click="scoreEvent_Click" />
         <Frame x:Name="eventInteractionPane" Grid.Column="2" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" 
                LoadCompleted="EventPane_LoadCompleted" >
             

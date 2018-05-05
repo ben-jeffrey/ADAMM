@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace ADAMM {
     /// <summary>
-    /// Interaction logic for EventReportMenu.xaml
+    /// Submenu of EventTab for creating reports for events
     /// </summary>
     public partial class EventReportMenu : Page {
 
@@ -27,19 +27,19 @@ namespace ADAMM {
             InitializeComponent();
         }
 
+        // Called by EventTab on page load
         public void Setup(Meet m, List<Event> e) {
-            //PrintDialog printDialog = new PrintDialog();
-
+            // Create the report
             Report report = new Report(e, m);
             
-            //doc.Name = "TEST";
+            // Create the paginator for the report
             IDocumentPaginatorSource paginatorSource = report.Document;
 
+            // Display the document to the user
             docDisplay.Document = paginatorSource;
+            
+            // Set the data of the report to the list of events
             report.Document.DataContext = e;
-            //paginatorSource.DocumentPaginator.PageSize
-
-            //printDialog.PrintDocument(paginatorSource.DocumentPaginator, "Hello");
         }
     }
 }

@@ -8,7 +8,7 @@
         Closing="Window_Closing"
         Title="MainWindow" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto">
+        <TabControl x:Name="tabControl" HorizontalContentAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="Events">
                 <Frame x:Name="EventTabFrame" LoadCompleted="EventTab_LoadCompleted" NavigationUIVisibility="Hidden" />
             </TabItem>

@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace ADAMM {
     class RelayEvent {
+        // This is near the top of the TODO list
+        // Relays are fairly common
     }
 }
